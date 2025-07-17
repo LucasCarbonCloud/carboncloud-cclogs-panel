@@ -7,9 +7,10 @@ import { PanelDataErrorView } from '@grafana/runtime';
 import '../style.js';
 import { Table } from './Table';
 import { Settings } from './Settings';
-import { getTemplateSrv } from '@grafana/runtime';
 
 interface Props extends PanelProps<SimpleOptions> {}
+
+import { locationService } from '@grafana/runtime';
 
 const getStyles = () => {
   return {
@@ -35,13 +36,13 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   if (data.series.length !== 1) {
     return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />;
   }
-  console.log(getTemplateSrv().replace('$searchTerm'));
 
   const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
   const [selectedFields, setSelectedFields] = useState<string[]>(keys);
   const [showLevel, setShowLevel] = useState<boolean>(false);
+  locationService.partial({ 'var-searchTerm': 'kube' }, true);
 
   const handleFieldChange = (value: string[], type: string) => {
     if (type == 'label') {

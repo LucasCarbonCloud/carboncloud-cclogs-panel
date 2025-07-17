@@ -76,7 +76,6 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
         );
       }
     }
-    // displayValue = truncateString(value, 140);
   } else if (columnName.startsWith('labels.')) {
     displayValue = value[columnName.replace(/^labels\./, '')];
     if (displayValue == undefined) {
@@ -86,7 +85,6 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
 
   return (
     <td className={`font-mono h-full text-nowrap`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
-      {/*return a div with string h in it if columnName == timestamp*/}
       <div className={pClass}>{displayValue}</div>
     </td>
   );

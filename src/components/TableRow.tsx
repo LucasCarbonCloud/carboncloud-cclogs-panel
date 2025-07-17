@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TableData } from './TableData';
+import { LogDetails } from './LogDetails';
 
 export interface TableRowProps {
   rowIndex: number;
@@ -13,6 +14,12 @@ export const createTableRow = (keys: string[], fields: any[]) => {
   }, {} as { [key: string]: number });
 
   const TableRowWithKeys: React.FC<TableRowProps> = ({ rowIndex, showLabel }) => {
+    const [showDetails, setShowDetails] = useState<boolean>(false);
+
+    const onClick = () => {
+      setShowDetails(!showDetails);
+    };
+
     const rowData = keys.map((key: string) => {
       if (key.startsWith('labels.')) {
         const colIdx = keyIndexMap['labels'];
@@ -23,11 +30,14 @@ export const createTableRow = (keys: string[], fields: any[]) => {
     });
 
     return (
-      <tr className={`border-b-neutral-200 border-b-1 hover:bg-neutral-50`}>
-        {rowData.map((value, idx) => (
-          <TableData key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
-        ))}
-      </tr>
+      <>
+        <tr className={`border-b-neutral-200 border-b-1 hover:bg-neutral-50`} onClick={onClick}>
+          {rowData.map((value, idx) => (
+            <TableData key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
+          ))}
+        </tr>
+        {showDetails && <LogDetails fields={fields} rowIndex={rowIndex} />}
+      </>
     );
   };
 
