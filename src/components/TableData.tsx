@@ -4,15 +4,13 @@ import dayjs from 'dayjs';
 export interface TableDataProps {
   columnName: string;
   value: any;
-  level: string;
+  displayLevel: boolean;
 }
 
-export const TableData: React.FC<TableDataProps> = ({ columnName, value, level }) => {
+export const TableData: React.FC<TableDataProps> = ({ columnName, value, displayLevel }) => {
   let displayValue = value;
   let pClass = 'px-4';
 
-  // This should be a global var somehow
-  const displayLevel = false;
   // const dateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
   const dateFormat = 'MMM DD HH:mm:ss.SSS';
 
@@ -25,7 +23,7 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, level }
       case 'INFO':
         color = 'bg-green-500';
         break;
-      case 'WARNING':
+      case 'WARN':
         color = 'bg-yellow-500';
         break;
       case 'ERROR':
@@ -61,13 +59,4 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, level }
       <div className={pClass}>{String(displayValue)}</div>
     </td>
   );
-};
-
-const getJsonParam = (field: string, jsonString: string): string => {
-  try {
-    const data: Record<string, any> = JSON.parse(jsonString);
-    return data[field] ?? '';
-  } catch (e) {
-    return '';
-  }
 };
