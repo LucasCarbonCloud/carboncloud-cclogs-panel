@@ -31,8 +31,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 38,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -63,44 +63,8 @@
           },
           "pluginVersion": "4.10.1",
           "queryType": "table",
-          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) \nORDER BY timestamp DESC LIMIT 1000",
+          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\", \n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) and level != 'SPAN' \nORDER BY timestamp DESC LIMIT 1000",
           "refId": "A"
-        }
-      ],
-      "title": "Sample Panel Title",
-      "type": "carboncloud-cclogs-panel"
-    },
-    {
-      "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "trlxrdZVk"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "seriesCountSize": "sm",
-        "showSeriesCount": false,
-        "text": "Default value of text input option"
-      },
-      "pluginVersion": "1.0.0",
-      "targets": [
-        {
-          "alias": "",
-          "datasource": {
-            "type": "grafana-testdata-datasource",
-            "uid": "db84e60d-b92a-4089-82cb-34842fb1754b"
-          },
-          "refId": "A",
-          "scenarioId": "no_data_points"
         }
       ],
       "title": "Sample Panel Title",
