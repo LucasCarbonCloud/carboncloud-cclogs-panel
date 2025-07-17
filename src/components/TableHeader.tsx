@@ -11,7 +11,7 @@ export interface TableHeaderProps {
 
 export const TableHeader: React.FC<TableHeaderProps> = ({ keys, sortField, sortDirection, onSort, showLevel }) => {
   return (
-    <thead className="sticky top-0 z-10 w-full uppercase bg-white border-b-1 border-neutral-800">
+    <thead className="sticky top-0 z-10 w-full uppercase bg-white">
       <tr className="w-full">
         {keys.map((key) => (
           <th
@@ -20,8 +20,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({ keys, sortField, sortD
             style={{ maxWidth: '100%' }}
             onClick={() => onSort(key)}
           >
-            <div className="flex justify-start items-center px-4">
-              {sortField === key && <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>}
+            <div className="flex justify-start items-center px-4 border-b-1 border-neutral-300">
+              {sortField === key && <span className="mr-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>}
               <span>{prettifyHeaderNames(key, showLevel)}</span>
             </div>
           </th>

@@ -63,7 +63,7 @@
           },
           "pluginVersion": "4.10.1",
           "queryType": "table",
-          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\", \n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) and level != 'SPAN' \nORDER BY timestamp DESC LIMIT 1000",
+          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\", \n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) and level != 'SPAN' AND (body LIKE '%${searchTerm}%')\nORDER BY timestamp DESC LIMIT 1000",
           "refId": "A"
         }
       ],
@@ -76,15 +76,33 @@
   "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Search",
+        "name": "searchTerm",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Provisioned cc-logs dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 1
+  "version": 8
 }

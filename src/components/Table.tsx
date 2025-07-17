@@ -60,11 +60,11 @@ export const Table: React.FC<TableProps> = ({ fields, keys, showLevel }) => {
   const TableRowWithKeys = createTableRow(keys, fields);
 
   return (
-    <div className="overflow-scroll flex-grow w-full h-full" style={{ contain: 'strict' }}>
-      <table
-        className="w-full rounded-lg border-x-1 border-neutral-200 table-spacing"
-        style={{ borderSpacing: '0.75rem' }}
-      >
+    <div
+      className="overflow-scroll flex-grow w-full h-full rounded-lg border-1 border-neutral-100"
+      style={{ contain: 'strict' }}
+    >
+      <table className="w-full rounded-lg table-spacing" style={{ borderSpacing: '0.75rem' }}>
         <TableHeader
           keys={keys}
           sortField={sortField}
