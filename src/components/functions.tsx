@@ -45,3 +45,11 @@ export function getOptionsForVariable(name: string): string[] {
   const options = variable.options as VariableOption[];
   return options.map((opt) => opt.value);
 }
+
+export function truncateString(str: string, num: number) {
+  if (str.length > num) {
+    return str.slice(0, num) + '...';
+  } else {
+    return str;
+  }
+}
