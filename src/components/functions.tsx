@@ -43,7 +43,7 @@ export function getOptionsForVariable(name: string): string[] {
   }
 
   const options = variable.options as VariableOption[];
-  return options.map((opt) => opt.value);
+  return options.map((opt) => String(opt.value));
 }
 
 export function truncateString(str: string, num: number) {
