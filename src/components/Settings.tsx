@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FieldSelector } from './SettingComponents';
+import { FieldSelector } from './Components';
 
 export interface SettingsProps {
   fields: string[];
@@ -39,9 +39,7 @@ export const Settings: React.FC<SettingsProps> = ({
   };
 
   return (
-    <div
-      className={`h-full overflow-y-scroll flex flex-col border-1 rounded-lg p-1 bg-neutral-50 shadow border-neutral-100`}
-    >
+    <div className={`h-full overflow-y-scroll flex flex-col border-1 rounded-lg p-3 border-neutral-100`}>
       <p className={`h-2 font-semibold uppercase text-neutral-700 pb-5`}>Settings</p>
       <div className={`flex flex-col`}>
         <FieldSelector field="Show Level" isChecked={showLevel} onChange={handleShowLevelChange} />

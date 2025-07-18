@@ -4,6 +4,7 @@ import { SimpleOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { useStyles2, useTheme2 } from '@grafana/ui';
 import { PanelDataErrorView } from '@grafana/runtime';
+import { getTemplateSrv } from '@grafana/runtime';
 import '../style.js';
 import { Table } from './Table';
 import { Settings } from './Settings';
@@ -11,6 +12,7 @@ import { Settings } from './Settings';
 interface Props extends PanelProps<SimpleOptions> {}
 
 import { locationService } from '@grafana/runtime';
+import { Searchbar } from './Components';
 
 const getStyles = () => {
   return {
@@ -42,7 +44,9 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
   const [selectedFields, setSelectedFields] = useState<string[]>(keys);
   const [showLevel, setShowLevel] = useState<boolean>(false);
-  locationService.partial({ 'var-searchTerm': 'kube' }, true);
+  const [searchTerm, setSearchTerm] = useState<string>(getTemplateSrv().replace('$searchTerm'));
+
+  // locationService.partial({ 'var-searchTerm': 'kube' }, true);
 
   const handleFieldChange = (value: string[], type: string) => {
     if (type == 'label') {
@@ -50,6 +54,12 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
     } else if (type == 'field') {
       setSelectedFields(value);
     }
+  };
+
+  const handleSearchTermChange = (value: string) => {
+    setSearchTerm(value);
+    console.log('hej');
+    locationService.partial({ 'var-searchTerm': value }, true);
   };
 
   const fields = data.series[0].fields;
@@ -71,7 +81,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   labels = labels.sort();
 
   return (
-    <div className={`flex h-full w-full gap-4`}>
+    <div className={`flex h-full w-full gap-4 p-2`}>
       <Settings
         fields={keys}
         selectedFields={selectedFields}
@@ -81,7 +91,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
         setShowLevel={setShowLevel}
         onChange={handleFieldChange}
       />
-      <Table fields={fields} keys={fieldsList} showLevel={showLevel} />
+      <div className="flex flex-col flex-grow gap-4 px-2">
+        <Searchbar searchTerm={searchTerm} onChange={handleSearchTermChange} />
+        <Table fields={fields} keys={fieldsList} showLevel={showLevel} />
+      </div>
     </div>
   );
 };

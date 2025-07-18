@@ -31,7 +31,7 @@ export const createTableRow = (keys: string[], fields: any[]) => {
 
     return (
       <>
-        <tr className={`border-b-neutral-200 border-b-1 hover:bg-neutral-50`} onClick={onClick}>
+        <tr className={`cursor-pointer border-b-neutral-200 border-b-1 hover:bg-neutral-50`} onClick={onClick}>
           {rowData.map((value, idx) => (
             <TableData key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
           ))}
