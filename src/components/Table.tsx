@@ -31,7 +31,7 @@ export const Table: React.FC<TableProps> = ({ fields, keys, showLevel }) => {
       let aValue, bValue;
 
       if (sortField.startsWith('labels.')) {
-        const labelKey = sortField.split('.')[1];
+        const labelKey = sortField.substring(7);
         const labelsFieldIndex = keyIndexMap['labels'];
         if (labelsFieldIndex !== undefined) {
           const aLabels = fields[labelsFieldIndex].values[a] || {};

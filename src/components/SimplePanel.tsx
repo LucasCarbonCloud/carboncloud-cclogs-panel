@@ -13,6 +13,8 @@ interface Props extends PanelProps<SimpleOptions> {}
 
 import { locationService } from '@grafana/runtime';
 import { Searchbar } from './Components';
+import { Overview } from './Overview';
+import { getOptionsForVariable, getValuesForVariable } from './functions';
 
 const getStyles = () => {
   return {
@@ -58,9 +60,19 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
 
   const handleSearchTermChange = (value: string) => {
     setSearchTerm(value);
-    console.log('hej');
     locationService.partial({ 'var-searchTerm': value }, true);
   };
+
+  // Get all variables
+
+  // Get value of a specific variable (e.g. 'myVar')
+  // const myVar = getTemplateSrv().getVariableValue('myQueryVar');
+
+  // Access current value (e.g. selected option(s))
+  // const currentValue = myVar?.global;
+
+  // If it's a multi-value variable, it could be an array:
+  // const selectedValues = Array.isArray(currentValue) ? currentValue : [currentValue];
 
   const fields = data.series[0].fields;
   // const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
@@ -77,20 +89,27 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
     }
   });
 
+  // const apps = getOptionsForVariable('app');
+
+  // locationService.partial({ 'var-app': ['beaker', 'pahtak'] }, true);
+
   const fieldsList = getFieldNames(keys, selectedFields, selectedLabels);
   labels = labels.sort();
 
   return (
     <div className={`flex h-full w-full gap-4 p-2`}>
-      <Settings
-        fields={keys}
-        selectedFields={selectedFields}
-        labels={labels}
-        selectedLabels={selectedLabels}
-        showLevel={showLevel}
-        setShowLevel={setShowLevel}
-        onChange={handleFieldChange}
-      />
+      <div className="flex flex-col gap-4 px-2">
+        <Overview fields={fields} />
+        <Settings
+          fields={keys}
+          selectedFields={selectedFields}
+          labels={labels}
+          selectedLabels={selectedLabels}
+          showLevel={showLevel}
+          setShowLevel={setShowLevel}
+          onChange={handleFieldChange}
+        />
+      </div>
       <div className="flex flex-col flex-grow gap-4 px-2">
         <Searchbar searchTerm={searchTerm} onChange={handleSearchTermChange} />
         <Table fields={fields} keys={fieldsList} showLevel={showLevel} />

@@ -22,6 +22,9 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
   } else if (columnName == 'level') {
     let color;
     switch (value) {
+      case 'DEBUG':
+        color = 'bg-blue-500';
+        break;
       case 'INFO':
         color = 'bg-green-500';
         break;

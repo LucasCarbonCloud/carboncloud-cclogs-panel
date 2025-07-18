@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { prettifyHeaderNames } from './functions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 export interface FieldSelectorProps {
   field: string;
   isChecked: boolean;
+  hidden: boolean;
   onChange: (field: string) => void;
 }
 
-export const FieldSelector: React.FC<FieldSelectorProps> = ({ field, isChecked, onChange }) => {
+export const FieldSelector: React.FC<FieldSelectorProps> = ({ field, isChecked, hidden, onChange }) => {
   return (
-    <div className={`w-full flex gap-2`}>
+    <div className={`w-full flex gap-2 ${hidden && `hidden`}`}>
       <input type="checkbox" value={field} checked={isChecked} onChange={() => onChange(field)} />
       <label key={field}>{prettifyHeaderNames(field, true)}</label>
     </div>
@@ -19,8 +20,6 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({ field, isChecked, 
 };
 
 export interface SearchbarProps {
-  // field: string;
-  // isChecked: boolean;
   searchTerm: string;
   onChange: (field: string) => void;
 }

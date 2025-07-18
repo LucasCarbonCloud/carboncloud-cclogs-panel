@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { FieldSelector } from './Components';
+import { Filter } from './Filter';
+import { getOptionsForVariable, getValuesForVariable } from './functions';
 
 export interface SettingsProps {
   fields: string[];
@@ -40,25 +42,41 @@ export const Settings: React.FC<SettingsProps> = ({
 
   return (
     <div className={`h-full overflow-y-scroll flex flex-col border-1 rounded-lg p-3 border-neutral-100`}>
-      <p className={`h-2 font-semibold uppercase text-neutral-700 pb-5`}>Settings</p>
-      <div className={`flex flex-col`}>
-        <FieldSelector field="Show Level" isChecked={showLevel} onChange={handleShowLevelChange} />
-        <p className={`h-2 font-semibold uppercase text-neutral-500 pt-3 pb-2`}>Fields</p>
-        <div className={`pl-2 gap-1`}>
-          {fields.map((field) => {
-            return (
-              <FieldSelector field={field} isChecked={selectedFields.includes(field)} onChange={handleFieldChange} />
-            );
-          })}
-          <p className={`h-2 font-semibold uppercase text-neutral-400 pt-3 pb-2 `}>Labels</p>
-          <div className={`pl-2 gap-1`}>
-            {labels.map((field) => {
-              return (
-                <FieldSelector field={field} isChecked={selectedLabels.includes(field)} onChange={handleLabelChange} />
-              );
-            })}
-          </div>
-        </div>
+      <p className={`h-2 font-semibold uppercase text-neutral-700 pb-5`}>Filters</p>
+      <div className="flex flex-col border-b-1 border-neutral-200">
+        <Filter field={'logLevel'} showName="Log Level" />
+        <Filter field={'app'} showName="app" />
+        <Filter field={'component'} showName="component" />
+        <Filter field={'team'} showName="team" />
+      </div>
+      <span>More filters will come here..</span>
+      <p className={`h-2 font-semibold uppercase text-neutral-700 pb-3 pt-5`}>Settings</p>
+      <FieldSelector field="Show level text" isChecked={showLevel} hidden={false} onChange={handleShowLevelChange} />
+      <p className={`h-2 font-semibold uppercase text-neutral-700 pt-5 pb-3`}>Fields</p>
+      <div className={`gap-1`}>
+        {fields.map((field) => {
+          return (
+            <FieldSelector
+              field={field}
+              isChecked={selectedFields.includes(field)}
+              hidden={false}
+              onChange={handleFieldChange}
+            />
+          );
+        })}
+      </div>
+      <p className={`h-2 font-semibold uppercase text-neutral-700 pt-5 pb-3 `}>Labels</p>
+      <div className={`gap-1`}>
+        {labels.map((field) => {
+          return (
+            <FieldSelector
+              field={field}
+              isChecked={selectedLabels.includes(field)}
+              hidden={false}
+              onChange={handleLabelChange}
+            />
+          );
+        })}
       </div>
     </div>
   );

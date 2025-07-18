@@ -63,7 +63,7 @@
           },
           "pluginVersion": "4.10.1",
           "queryType": "table",
-          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\", \n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) and level != 'SPAN' AND (body LIKE '%${searchTerm}%')\nORDER BY timestamp DESC LIMIT 1000",
+          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\" ,\n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) \n  AND ( LogAttributes['app'] IN (${app}) )\n  AND ( LogAttributes['component'] IN (${component}) )\n  AND ( LogAttributes['team'] IN (${team}) OR LogAttributes['team'] == '' )    \n  AND (body LIKE '%${searchTerm}%')\n  AND level IN (${logLevel})\n  AND ( LogAttributes['${customValKey1}'] LIKE '%${customValVal1}%' )  \n  AND ( LogAttributes['${customValKey2}'] LIKE '%${customValVal2}%' )  \n  AND ('${traceId}' = '' OR traceID = '${traceId}') \nORDER BY timestamp DESC LIMIT 1000",
           "refId": "A"
         }
       ],
@@ -79,11 +79,211 @@
     "list": [
       {
         "current": {
+          "text": "Apps",
+          "value": "clickhousetest"
+        },
+        "includeAll": false,
+        "label": "Datasource",
+        "name": "datasource",
+        "options": [],
+        "query": "grafana-clickhouse-datasource",
+        "refresh": 1,
+        "regex": "^(?!default$).*",
+        "type": "datasource"
+      },
+      {
+        "current": {
           "text": "",
           "value": ""
         },
-        "label": "Search",
+        "description": "",
+        "hide": 2,
+        "label": "Search:",
         "name": "searchTerm",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Trace ID",
+        "name": "traceId",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": ["$__all"],
+          "value": ["$__all"]
+        },
+        "includeAll": true,
+        "label": "Log Level",
+        "multi": true,
+        "name": "logLevel",
+        "options": [
+          {
+            "selected": false,
+            "text": "DEBUG",
+            "value": "DEBUG"
+          },
+          {
+            "selected": false,
+            "text": "INFO",
+            "value": "INFO"
+          },
+          {
+            "selected": false,
+            "text": "WARN",
+            "value": "WARN"
+          },
+          {
+            "selected": false,
+            "text": "ERROR",
+            "value": "ERROR"
+          },
+          {
+            "selected": false,
+            "text": "FATAL",
+            "value": "FATAL"
+          }
+        ],
+        "query": "DEBUG,INFO,WARN,ERROR,FATAL",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
+        },
+        "definition": "SELECT DISTINCT app_materialized AS app\nFROM \"otel_logs\"\nWHERE app != '' AND app IS NOT NULL\nORDER BY app;",
+        "includeAll": true,
+        "label": "App",
+        "multi": true,
+        "name": "app",
+        "options": [],
+        "query": "SELECT DISTINCT app_materialized AS app\nFROM \"otel_logs\"\nWHERE app != '' AND app IS NOT NULL\nORDER BY app;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
+        },
+        "definition": "SELECT DISTINCT component_materialized AS component\nFROM \"otel_logs\"\nWHERE component != '' AND component IS NOT NULL\nORDER BY component;",
+        "includeAll": true,
+        "label": "Component",
+        "multi": true,
+        "name": "component",
+        "options": [],
+        "query": "SELECT DISTINCT component_materialized AS component\nFROM \"otel_logs\"\nWHERE component != '' AND component IS NOT NULL\nORDER BY component;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
+        },
+        "definition": "SELECT DISTINCT LogAttributes['team'] AS team\nFROM \"otel_logs\"\nWHERE LogAttributes['team'] != '' AND LogAttributes['team'] IS NOT NULL\nORDER BY team;",
+        "includeAll": true,
+        "label": "Team",
+        "multi": true,
+        "name": "team",
+        "options": [],
+        "query": "SELECT DISTINCT LogAttributes['team'] AS team\nFROM \"otel_logs\"\nWHERE LogAttributes['team'] != '' AND LogAttributes['team'] IS NOT NULL\nORDER BY team;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Filter A Key:",
+        "name": "customValKey1",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Filter A Value:",
+        "name": "customValVal1",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Filter B Key:",
+        "name": "customValKey2",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Filter B Value:",
+        "name": "customValVal2",
         "options": [
           {
             "selected": true,
@@ -97,12 +297,12 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Provisioned cc-logs dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 8
+  "version": 5
 }
