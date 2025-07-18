@@ -16,7 +16,9 @@ export const Table: React.FC<TableProps> = ({ fields, keys, showLevel }) => {
   const [sortField, setSortField] = useState<string>('timestamp');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
-  if (fields.length == 0) return;
+  if (fields.length === 0) {
+    return;
+  }
   const rowCount = fields[0].values.length;
 
   const sortedRowIndices = useMemo(() => {
@@ -51,8 +53,12 @@ export const Table: React.FC<TableProps> = ({ fields, keys, showLevel }) => {
         bValue = fields[sortFieldIndex].values[b];
       }
 
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      if (aValue < bValue) {
+        return sortDirection === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortDirection === 'asc' ? 1 : -1;
+      }
       return 0;
     });
   }, [fields, sortField, sortDirection, rowCount]);

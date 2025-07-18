@@ -15,7 +15,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({ keys, sortField, sortD
       <tr className="w-full">
         {keys.map((key) => (
           <th
-            className={`${key == 'body' ? `` : ``} cursor-pointer hover:bg-gray-50 select-none`}
+            className={`${key === 'body' ? `` : ``} cursor-pointer hover:bg-gray-50 select-none`}
             key={key}
             style={{ maxWidth: '100%' }}
             onClick={() => onSort(key)}

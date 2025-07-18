@@ -18,7 +18,7 @@ export const Overview: React.FC<OverviewProps> = ({ fields }) => {
   let totalValue = 0;
 
   fields.forEach((f: Field) => {
-    if (f.name == 'level') {
+    if (f.name === 'level') {
       totalValue = f.values.length;
       f.values.forEach((v: string) => {
         data[v].value += 1;
@@ -40,7 +40,7 @@ export const Overview: React.FC<OverviewProps> = ({ fields }) => {
         <table className="text-sm">
           {Object.entries(data).map(([k, v]) => {
             return (
-              <tr className={`font-mono`}>
+              <tr key={k} className={`font-mono`}>
                 <td className={`font-semibold`}>{k}:</td>
                 <td>{v.value}</td>
               </tr>

@@ -16,10 +16,10 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
   // const dateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
   const dateFormat = 'MMM DD HH:mm:ss.SSS';
 
-  if (columnName == 'timestamp') {
+  if (columnName === 'timestamp') {
     // displayValue = formatTimestamp(value);
     displayValue = dayjs(value).format(dateFormat);
-  } else if (columnName == 'level') {
+  } else if (columnName === 'level') {
     let color;
     switch (value) {
       case 'DEBUG':
@@ -49,9 +49,9 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
     }
     // flex = 'flex';
     // displayValue = ``;
-  } else if (columnName == 'body') {
+  } else if (columnName === 'body') {
     const searchTerm = getTemplateSrv().replace('$searchTerm');
-    if (searchTerm != '') {
+    if (searchTerm !== '') {
       const sst = value.split(searchTerm);
       if (searchTerm.length > 1) {
         return (
@@ -62,16 +62,16 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
             {/*return a div with string h in it if columnName == timestamp*/}
             <div className={pClass + ` flex content-center`}>
               {sst.map((s: string, idx: number) => {
-                if (idx == sst.length - 1) {
-                  return <p style={{ margin: '0px' }}>{s}</p>;
+                if (idx === sst.length - 1) {
+                  return <p key={idx} style={{ margin: '0px' }}>{s}</p>;
                 }
                 return (
-                  <>
+                  <React.Fragment key={idx}>
                     <p style={{ margin: '0px' }}>{s}</p>
                     <p style={{ margin: '0px' }} className="px-1 m-0 bg-fuchsia-200 rounded-lg shadow">
                       {searchTerm}
                     </p>
-                  </>
+                  </React.Fragment>
                 );
               })}
             </div>
@@ -81,7 +81,7 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
     }
   } else if (columnName.startsWith('labels.')) {
     displayValue = value[columnName.replace(/^labels\./, '')];
-    if (displayValue == undefined) {
+    if (displayValue === undefined) {
       displayValue = '';
     }
   }

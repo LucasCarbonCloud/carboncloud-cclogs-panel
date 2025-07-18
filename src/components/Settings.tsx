@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { FieldSelector } from './Components';
 import { Filter } from './Filter';
-import { getOptionsForVariable, getValuesForVariable } from './functions';
 
 export interface SettingsProps {
   fields: string[];
@@ -57,6 +56,7 @@ export const Settings: React.FC<SettingsProps> = ({
         {fields.map((field) => {
           return (
             <FieldSelector
+              key={field}
               field={field}
               isChecked={selectedFields.includes(field)}
               hidden={false}
@@ -70,6 +70,7 @@ export const Settings: React.FC<SettingsProps> = ({
         {labels.map((field) => {
           return (
             <FieldSelector
+              key={field}
               field={field}
               isChecked={selectedLabels.includes(field)}
               hidden={false}

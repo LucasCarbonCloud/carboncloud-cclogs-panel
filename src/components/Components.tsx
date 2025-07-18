@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { prettifyHeaderNames } from './functions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 export interface FieldSelectorProps {
   field: string;

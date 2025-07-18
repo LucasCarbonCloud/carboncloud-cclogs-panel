@@ -11,7 +11,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ fields, rowIndex }) => {
   let labelVals: { [key: string]: string } = {};
 
   fields.forEach((field: Field) => {
-    if (field.name == 'labels') {
+    if (field.name === 'labels') {
       labelVals = field.values[rowIndex];
       return;
     }
@@ -20,12 +20,12 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ fields, rowIndex }) => {
 
   return (
     <tr>
-      <td colSpan="100%">
+      <td colSpan={'100%'}>
         <div className={`p-8 bg-neutral-50 border-1 border-neutral-200 rounded-lg m-8 shadow-lg`}>
           <table>
             {Object.entries(keyVals).map(([k, v]) => {
               return (
-                <tr className={`font-mono hover:bg-neutral-200`}>
+                <tr key={k} className={`font-mono hover:bg-neutral-200`}>
                   <td className={`font-semibold`}>{k}:</td>
                   <td>{v}</td>
                 </tr>
@@ -33,7 +33,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ fields, rowIndex }) => {
             })}
             {Object.entries(labelVals).map(([k, v]) => {
               return (
-                <tr className={`font-mono hover:bg-neutral-200`}>
+                <tr key={k} className={`font-mono hover:bg-neutral-200`}>
                   <td className={`font-semibold`}>{k}:</td>
                   <td>{v}</td>
                 </tr>

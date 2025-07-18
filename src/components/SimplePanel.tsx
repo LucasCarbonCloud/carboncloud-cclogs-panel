@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
 import { PanelProps, Field } from '@grafana/data';
 import { SimpleOptions } from 'types';
-import { PanelDataErrorView } from '@grafana/runtime';
-import { getTemplateSrv } from '@grafana/runtime';
+import { PanelDataErrorView, getTemplateSrv, locationService } from '@grafana/runtime';
 import '../style.js';
 import { Table } from './Table';
 import { Settings } from './Settings';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-import { locationService } from '@grafana/runtime';
 import { Searchbar } from './Components';
 import { Overview } from './Overview';
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
-  if (data.series.length !== 1) {
-    return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />;
-  }
-
   const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
@@ -25,12 +19,16 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   const [showLevel, setShowLevel] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>(getTemplateSrv().replace('$searchTerm'));
 
+  if (data.series.length !== 1) {
+    return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />;
+  }
+
   // locationService.partial({ 'var-searchTerm': 'kube' }, true);
 
   const handleFieldChange = (value: string[], type: string) => {
-    if (type == 'label') {
+    if (type === 'label') {
       setSelectedLabels(value);
-    } else if (type == 'field') {
+    } else if (type === 'field') {
       setSelectedFields(value);
     }
   };
@@ -56,11 +54,13 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   let labels: string[] = [];
 
   fields.forEach((field: Field) => {
-    if (field.name == 'labels') {
+    if (field.name === 'labels') {
       field.values.forEach((v) => {
         Object.keys(v).forEach((k: string) => {
           const fullK = 'labels.' + k;
-          if (!labels.includes(fullK)) labels.push(fullK);
+          if (!labels.includes(fullK)) {
+            labels.push(fullK);
+          }
         });
       });
     }

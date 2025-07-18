@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight, faFilter, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FieldSelector } from './Components';
 import { locationService } from '@grafana/runtime';
-import { selectOverrideProcessor } from '@grafana/data';
 import { getOptionsForVariable, getValuesForVariable } from './functions';
 
 export interface FilterProps {
@@ -109,14 +108,15 @@ const FilterContent: React.FC<FilterContentProps> = ({ options, selectedOptions,
         {options.map((o) => {
           return (
             <div
+              key={o}
               className={`w-full flex hover:bg-neutral-100 ${
-                searchTerm != '' && !o.toLowerCase().startsWith(searchTerm.toLowerCase()) && `hidden`
+                searchTerm !== '' && !o.toLowerCase().startsWith(searchTerm.toLowerCase()) && `hidden`
               }`}
             >
               <FieldSelector
                 field={o}
                 isChecked={selectedOptions.includes(o)}
-                hidden={searchTerm != '' && !o.toLowerCase().startsWith(searchTerm.toLowerCase())}
+                hidden={searchTerm !== '' && !o.toLowerCase().startsWith(searchTerm.toLowerCase())}
                 onChange={handleFieldChange}
               />
               <div
