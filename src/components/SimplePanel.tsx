@@ -89,7 +89,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
       </div>
       <div className="flex flex-col flex-grow gap-4 px-2">
         <Searchbar searchTerm={searchTerm} onChange={handleSearchTermChange} />
-        <Table fields={fields} keys={fieldsList} showLevel={showLevel} />
+        <Table options={options} fields={fields} keys={fieldsList} showLevel={showLevel} />
       </div>
     </div>
   );

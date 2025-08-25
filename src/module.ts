@@ -5,6 +5,12 @@ import { SimplePanel } from './components/SimplePanel';
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
     .addTextInput({
+      path: 'traceUrl',
+      name: 'Trace Dashboard URL',
+      description: 'URL to the trace dashboard, {{ traceID }} will be replaced with the actual traceID',
+      defaultValue: '{{ traceID }}',
+    })
+    .addTextInput({
       path: 'text',
       name: 'Simple text option',
       description: 'Description of panel option',

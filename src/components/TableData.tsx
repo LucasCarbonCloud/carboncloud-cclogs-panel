@@ -1,15 +1,17 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { SimpleOptions } from 'types';
 
 import { getTemplateSrv } from '@grafana/runtime';
 
 export interface TableDataProps {
+  options: SimpleOptions;
   columnName: string;
   value: any;
   displayLevel: boolean;
 }
 
-export const TableData: React.FC<TableDataProps> = ({ columnName, value, displayLevel }) => {
+export const TableData: React.FC<TableDataProps> = ({ options, columnName, value, displayLevel }) => {
   let displayValue = value;
   let pClass = 'px-4';
 
@@ -63,7 +65,11 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
             <div className={pClass + ` flex content-center`}>
               {sst.map((s: string, idx: number) => {
                 if (idx === sst.length - 1) {
-                  return <p key={idx} style={{ margin: '0px' }}>{s}</p>;
+                  return (
+                    <p key={idx} style={{ margin: '0px' }}>
+                      {s}
+                    </p>
+                  );
                 }
                 return (
                   <React.Fragment key={idx}>
@@ -84,6 +90,14 @@ export const TableData: React.FC<TableDataProps> = ({ columnName, value, display
     if (displayValue === undefined) {
       displayValue = '';
     }
+  }
+
+  if (columnName === 'traceID') {
+    return (
+      <td className={`font-mono h-full text-nowrap hover:underline`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
+      <div className={pClass}><a href={ options.traceUrl.replace("{{ traceID }}", displayValue)} target="_blank" rel="noreferrer">{displayValue}</a></div>
+      </td>
+    );
   }
 
   return (

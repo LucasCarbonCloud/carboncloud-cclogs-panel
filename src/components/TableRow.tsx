@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { TableData } from './TableData';
 import { LogDetails } from './LogDetails';
 
+import { SimpleOptions } from 'types';
+
 export interface TableRowProps {
   rowIndex: number;
   showLabel: boolean;
 }
 
-export const createTableRow = (keys: string[], fields: any[]) => {
+export const createTableRow = (options: SimpleOptions, keys: string[], fields: any[]) => {
   const keyIndexMap = fields.reduce((acc, field, idx) => {
     acc[field.name] = idx;
     return acc;
@@ -31,9 +33,9 @@ export const createTableRow = (keys: string[], fields: any[]) => {
 
     return (
       <>
-        <tr className={`cursor-pointer border-b-neutral-200 border-b-1 hover:bg-neutral-50 text-sm`} onClick={onClick}>
+        <tr className={`cursor-default border-b-neutral-200 border-b-1 hover:bg-neutral-50 text-sm`} onClick={onClick}>
           {rowData.map((value, idx) => (
-            <TableData key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
+            <TableData options={options} key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
           ))}
         </tr>
         {showDetails && <LogDetails fields={fields} rowIndex={rowIndex} />}

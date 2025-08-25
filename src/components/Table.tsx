@@ -3,7 +3,10 @@ import { Field } from '@grafana/data';
 import { createTableRow } from './TableRow';
 import { TableHeader } from './TableHeader';
 
+import { SimpleOptions } from 'types';
+
 export interface TableProps {
+  options: SimpleOptions;
   fields: Field[];
   keys: string[];
   showLevel: boolean;
@@ -12,7 +15,7 @@ export interface TableProps {
   // level: string;
 }
 
-export const Table: React.FC<TableProps> = ({ fields, keys, showLevel }) => {
+export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel }) => {
   const [sortField, setSortField] = useState<string>('timestamp');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -63,7 +66,7 @@ export const Table: React.FC<TableProps> = ({ fields, keys, showLevel }) => {
     });
   }, [fields, sortField, sortDirection, rowCount]);
 
-  const TableRowWithKeys = createTableRow(keys, fields);
+  const TableRowWithKeys = createTableRow(options, keys, fields);
 
   return (
     <div
