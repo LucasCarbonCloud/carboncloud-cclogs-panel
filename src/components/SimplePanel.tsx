@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { PanelProps, Field } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import { PanelDataErrorView, getTemplateSrv, locationService } from '@grafana/runtime';
+import { useTheme2 } from '@grafana/ui';
 import '../style.js';
 import { Table } from './Table';
 import { Settings } from './Settings';
+import clsx from 'clsx';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -12,6 +14,8 @@ import { Searchbar } from './Components';
 import { Overview } from './Overview';
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
+const theme = useTheme2();
+
   const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
@@ -74,8 +78,12 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   labels = labels.sort();
 
   return (
-    <div className={`flex h-full w-full gap-4 p-2`}>
-      <div className="flex flex-col gap-4 px-2">
+<div className={`flex h-full w-full gap-4 p-2`}>
+      <div
+        className={clsx(
+          'flex flex-col gap-4 px-2',
+        )}
+      >
         <Overview fields={fields} />
         <Settings
           fields={keys}

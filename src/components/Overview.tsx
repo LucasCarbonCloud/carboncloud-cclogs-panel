@@ -7,6 +7,7 @@ export interface OverviewProps {
 }
 
 export const Overview: React.FC<OverviewProps> = ({ fields }) => {
+
   type LogDataMap = {
     [key: string]: { value: number; color: string };
   };

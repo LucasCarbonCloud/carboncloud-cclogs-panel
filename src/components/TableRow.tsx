@@ -3,6 +3,8 @@ import { TableData } from './TableData';
 import { LogDetails } from './LogDetails';
 
 import { SimpleOptions } from 'types';
+import { useTheme2 } from '@grafana/ui';
+import clsx from 'clsx';
 
 export interface TableRowProps {
   rowIndex: number;
@@ -10,6 +12,7 @@ export interface TableRowProps {
 }
 
 export const createTableRow = (options: SimpleOptions, keys: string[], fields: any[]) => {
+  const theme = useTheme2();
   const keyIndexMap = fields.reduce((acc, field, idx) => {
     acc[field.name] = idx;
     return acc;
@@ -33,7 +36,13 @@ export const createTableRow = (options: SimpleOptions, keys: string[], fields: a
 
     return (
       <>
-        <tr className={`cursor-default border-b-neutral-200 border-b-1 hover:bg-neutral-50 text-sm`} onClick={onClick}>
+        <tr
+          className={clsx(
+            'cursor-default border-b-1 hover:bg-neutral-50 text-sm',
+            theme.isDark ? 'border-b-neutral-200/20 hover:bg-neutral-50/20' : 'border-b-neutral-200 hover:bg-neutral-50'
+          )}
+          onClick={onClick}
+        >
           {rowData.map((value, idx) => (
             <TableData options={options} key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
           ))}

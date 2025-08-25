@@ -3,6 +3,9 @@ import dayjs from 'dayjs';
 import { SimpleOptions } from 'types';
 
 import { getTemplateSrv } from '@grafana/runtime';
+import { useTheme2 } from '@grafana/ui';
+import clsx from 'clsx';
+
 
 export interface TableDataProps {
   options: SimpleOptions;
@@ -12,6 +15,7 @@ export interface TableDataProps {
 }
 
 export const TableData: React.FC<TableDataProps> = ({ options, columnName, value, displayLevel }) => {
+  const theme = useTheme2();
   let displayValue = value;
   let pClass = 'px-4';
 
@@ -74,7 +78,12 @@ export const TableData: React.FC<TableDataProps> = ({ options, columnName, value
                 return (
                   <React.Fragment key={idx}>
                     <p style={{ margin: '0px' }}>{s}</p>
-                    <p style={{ margin: '0px' }} className="px-1 m-0 bg-fuchsia-200 rounded-lg shadow">
+                    <p style={{ margin: '0px' }}
+                       className={clsx(
+                         'px-1 m-0 bg-fuchsia-200 rounded-lg shadow',
+                         theme.isDark ? 'bg-fuchsia-900' : 'bg-fuchsia-200'
+                       )}
+                    >
                       {searchTerm}
                     </p>
                   </React.Fragment>
@@ -94,7 +103,7 @@ export const TableData: React.FC<TableDataProps> = ({ options, columnName, value
 
   if (columnName === 'traceID') {
     return (
-      <td className={`font-mono h-full text-nowrap hover:underline`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
+      <td className={`font-mono h-full text-nowrap hover:underline dark:text-2xl`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
       <div className={pClass}><a href={ options.traceUrl.replace("{{ traceID }}", displayValue)} target="_blank" rel="noreferrer">{displayValue}</a></div>
       </td>
     );

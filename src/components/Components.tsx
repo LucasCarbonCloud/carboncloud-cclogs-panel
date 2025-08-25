@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { prettifyHeaderNames } from './functions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useTheme2 } from '@grafana/ui';
+import clsx from 'clsx';
 
 export interface FieldSelectorProps {
   field: string;
@@ -27,6 +29,8 @@ export interface SearchbarProps {
 export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, onChange }) => {
   const [localValue, setLocalValue] = useState(searchTerm);
 
+  const theme = useTheme2();
+
   useEffect(() => {
     setLocalValue(searchTerm);
   }, [searchTerm]);
@@ -40,8 +44,19 @@ export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, onChange }) =>
   }, [localValue, onChange]);
 
   return (
-    <div className="flex items-center w-full rounded-lg border-1 border-neutral-200">
-      <div className="flex items-center px-4 h-full rounded-l-lg bg-neutral-200">
+    <div
+      className={clsx(
+        'flex items-center w-full rounded-lg border-1',
+        theme.isDark ? 'border-neutral-200/20' : 'border-neutral-200'
+      )}
+    >
+      <div
+        className={clsx(
+          'flex items-center px-4 h-full rounded-l-lg',
+          theme.isDark ? 'bg-neutral-200/20' : 'bg-neutral-200'
+        )}
+      >
+
         <FontAwesomeIcon icon={faMagnifyingGlass} />
       </div>
       <input

@@ -1,5 +1,7 @@
 import React from 'react';
 import { prettifyHeaderNames } from './functions';
+import { useTheme2 } from '@grafana/ui';
+import clsx from 'clsx';
 
 export interface TableHeaderProps {
   keys: string[];
@@ -10,17 +12,33 @@ export interface TableHeaderProps {
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({ keys, sortField, sortDirection, onSort, showLevel }) => {
+  const theme = useTheme2();
   return (
-    <thead className="sticky top-0 z-10 w-full uppercase bg-white">
+    <thead
+      className={clsx(
+        'sticky top-0 z-10 w-full uppercase',
+        theme.isDark ? 'bg-[#111217]' : 'bg-white'
+      )}
+    >
+
       <tr className="w-full">
         {keys.map((key) => (
           <th
-            className={`${key === 'body' ? `` : ``} cursor-pointer hover:bg-gray-50 select-none`}
+            // className={`${key === 'body' ? `` : ``} cursor-pointer hover:bg-gray-50 select-none`}
+            className={clsx(
+              'cursor-pointer select-none',
+              theme.isDark ? 'hover:bg-gray-50/20' : 'hover:bg-gray-50'
+            )}
             key={key}
             style={{ maxWidth: '100%' }}
             onClick={() => onSort(key)}
           >
-            <div className="flex justify-start items-center px-4 border-b-1 border-neutral-300">
+            <div
+                 className={clsx(
+                   'flex justify-start items-center px-4 border-b-1',
+                   theme.isDark ? 'border-neutral-300/20' : 'border-neutral-300'
+                 )}
+            >
               {sortField === key && <span className="mr-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>}
               <span>{prettifyHeaderNames(key, showLevel)}</span>
             </div>

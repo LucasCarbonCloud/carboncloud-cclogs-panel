@@ -5,6 +5,9 @@ import { TableHeader } from './TableHeader';
 
 import { SimpleOptions } from 'types';
 
+import { useTheme2 } from '@grafana/ui';
+import clsx from 'clsx';
+
 export interface TableProps {
   options: SimpleOptions;
   fields: Field[];
@@ -16,6 +19,8 @@ export interface TableProps {
 }
 
 export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel }) => {
+  const theme = useTheme2();
+
   const [sortField, setSortField] = useState<string>('timestamp');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -70,7 +75,10 @@ export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel }
 
   return (
     <div
-      className="overflow-scroll flex-grow w-full h-full rounded-lg border-1 border-neutral-100"
+      className={clsx(
+        'overflow-scroll flex-grow w-full h-full rounded-lg border-1',
+        theme.isDark ? 'border-neutral-100/20' : 'border-neutral-200'
+      )}
       style={{ contain: 'strict' }}
     >
       <table className="w-full rounded-lg table-spacing" style={{ borderSpacing: '0.75rem' }}>

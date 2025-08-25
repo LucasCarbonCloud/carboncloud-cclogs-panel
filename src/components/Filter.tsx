@@ -4,6 +4,8 @@ import { faChevronDown, faChevronRight, faFilter, faCircleXmark } from '@fortawe
 import { FieldSelector } from './Components';
 import { locationService } from '@grafana/runtime';
 import { getOptionsForVariable, getValuesForVariable } from './functions';
+import { useTheme2 } from '@grafana/ui';
+import clsx from 'clsx';
 
 export interface FilterProps {
   field: string;
@@ -13,6 +15,8 @@ export interface FilterProps {
 }
 
 export const Filter: React.FC<FilterProps> = ({ field, showName }) => {
+  const theme = useTheme2();
+
   const options = getOptionsForVariable(field);
   const selected = getValuesForVariable(field);
 
@@ -43,7 +47,12 @@ export const Filter: React.FC<FilterProps> = ({ field, showName }) => {
   };
 
   return (
-    <div className="flex flex-col py-2 select-none border-t-1 border-neutral-200">
+    <div
+     className={clsx(
+       'flex flex-col py-2 select-none border-t-1',
+       theme.isDark ? 'border-neutral-200/20' : 'border-neutral-200'
+     )}
+    >
       <div className={`w-full flex items-center justify-between`}>
         <div className="cursor-pointer" onClick={() => onClick()}>
           <FontAwesomeIcon className="w-6" icon={open ? faChevronDown : faChevronRight} />
@@ -79,6 +88,8 @@ interface FilterContentProps {
 }
 
 const FilterContent: React.FC<FilterContentProps> = ({ options, selectedOptions, handleFieldChange }) => {
+  const theme = useTheme2();
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   // const [open, setOpen] = useState<boolean>(false);
 
@@ -88,7 +99,13 @@ const FilterContent: React.FC<FilterContentProps> = ({ options, selectedOptions,
 
   return (
     <div className={`w-full flex flex-col mt-2`}>
-      <div className="flex relative items-center mb-2 rounded-md border-neutral-200 border-1">
+      <div
+        className={clsx(
+          'flex relative items-center mb-2 rounded-md border-1',
+          theme.isDark ? 'border-neutral-200/20' : 'border-neutral-200'
+        )}
+
+      >
         <div className="flex items-center px-2 h-full rounded-l-lg text-neutral-400">
           <FontAwesomeIcon icon={faFilter} />
         </div>
@@ -109,10 +126,13 @@ const FilterContent: React.FC<FilterContentProps> = ({ options, selectedOptions,
           return (
             <div
               key={o}
-              className={`w-full flex hover:bg-neutral-100 ${
+              className={clsx(
+                'w-full flex',
+                theme.isDark ? 'hover:bg-neutral-100/20' : 'hover:bg-neutral-100',
                 searchTerm !== '' && !o.toLowerCase().startsWith(searchTerm.toLowerCase()) && `hidden`
-              }`}
+              )}
             >
+
               <FieldSelector
                 field={o}
                 isChecked={selectedOptions.includes(o)}
@@ -121,7 +141,10 @@ const FilterContent: React.FC<FilterContentProps> = ({ options, selectedOptions,
               />
               <div
                 onClick={() => handleFieldChange(o, 'only')}
-                className="flex items-center px-1 text-xs align-middle rounded-xl cursor-pointer text-neutral-400 hover:bg-neutral-200"
+                className={clsx(
+                  "flex items-center px-1 text-xs align-middle rounded-xl cursor-pointer text-neutral-400",
+                  theme.isDark ? 'hover:bg-neutral-800' : 'hover:bg-neutral-200'
+                )}
               >
                 <span>only</span>
               </div>
