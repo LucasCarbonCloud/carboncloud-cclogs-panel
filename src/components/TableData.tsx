@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { SimpleOptions, FilterOperation } from 'types';
 
@@ -22,58 +22,54 @@ export interface TableDataProps {
   ) => void;
 }
 
-export const TableData: React.FC<TableDataProps> = ({ options, columnName, value, displayLevel, setSelectedFilters }) => {
+export const TableData: React.FC<TableDataProps> = React.memo(function TableData({ options, columnName, value, displayLevel, setSelectedFilters }) {
   const theme = useTheme2();
-  let displayValue = value;
-  let pClass = 'px-4 flex relative';
+  
+  const processedData = useMemo(() => {
+    let displayValue = value;
+    let pClass = 'flex relative min-w-0 w-full';
+    let isSpecialRendering = false;
+    let specialContent = null;
 
-  // const dateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
-  const dateFormat = 'MMM DD HH:mm:ss.SSS';
+    const dateFormat = 'MMM DD HH:mm:ss.SSS';
 
-  if (columnName === 'timestamp') {
-    // displayValue = formatTimestamp(value);
-    displayValue = dayjs(value).format(dateFormat);
-  } else if (columnName === 'level') {
-    let color;
-    switch (value) {
-      case 'DEBUG':
-        color = 'bg-blue-500';
-        break;
-      case 'INFO':
-        color = 'bg-green-500';
-        break;
-      case 'WARN':
-        color = 'bg-yellow-500';
-        break;
-      case 'ERROR':
-        color = 'bg-red-500';
-        break;
-      case 'FATAL':
-        color = 'bg-purple-500';
-        break;
-      default:
-        color = 'bg-gray-500';
-    }
-    pClass = `mr-1 ml-1 min-h-[1.5rem] ${color} `;
-    if (!displayLevel) {
-      pClass += 'w-1.5 rounded-full';
-      displayValue = ``;
-    } else {
-      pClass += 'rounded-lg px-1';
-    }
-    // flex = 'flex';
-    // displayValue = ``;
-  } else if (columnName === 'body') {
-    const searchTerm = getTemplateSrv().replace('$searchTerm');
-    if (searchTerm !== '') {
-      const sst = value.split(searchTerm);
-      if (searchTerm.length > 1) {
-        return (
-          <td
-            className={`font-mono h-full text-nowrap `}
-            style={{ paddingBottom: '4px', paddingTop: '4px', margin: '0px' }}
-          >
-            {/*return a div with string h in it if columnName == timestamp*/}
+    if (columnName === 'timestamp') {
+      displayValue = dayjs(value).format(dateFormat);
+    } else if (columnName === 'level') {
+      let color;
+      switch (value) {
+        case 'DEBUG':
+          color = 'bg-blue-500';
+          break;
+        case 'INFO':
+          color = 'bg-green-500';
+          break;
+        case 'WARN':
+          color = 'bg-yellow-500';
+          break;
+        case 'ERROR':
+          color = 'bg-red-500';
+          break;
+        case 'FATAL':
+          color = 'bg-purple-500';
+          break;
+        default:
+          color = 'bg-gray-500';
+      }
+      pClass = `mr-1 ml-1 min-h-[1.5rem] ${color} `;
+      if (!displayLevel) {
+        pClass += 'w-1.5 rounded-full';
+        displayValue = ``;
+      } else {
+        pClass += 'rounded-lg px-1';
+      }
+    } else if (columnName === 'body') {
+      const searchTerm = getTemplateSrv().replace('$searchTerm');
+      if (searchTerm !== '' && searchTerm.length > 1) {
+        const sst = value.split(searchTerm);
+        if (sst.length > 1) {
+          isSpecialRendering = true;
+          specialContent = (
             <div className={pClass + ` flex content-center`}>
               {sst.map((s: string, idx: number) => {
                 if (idx === sst.length - 1) {
@@ -99,71 +95,100 @@ export const TableData: React.FC<TableDataProps> = ({ options, columnName, value
                 );
               })}
             </div>
-          </td>
-        );
+          );
+        }
+      }
+    } else if (columnName.startsWith('labels.')) {
+      displayValue = value[columnName.replace(/^labels\./, '')];
+      if (displayValue === undefined) {
+        displayValue = '';
       }
     }
-  } else if (columnName.startsWith('labels.')) {
-    displayValue = value[columnName.replace(/^labels\./, '')];
-    if (displayValue === undefined) {
-      displayValue = '';
-    }
+
+    return { displayValue, pClass, isSpecialRendering, specialContent };
+  }, [columnName, value, displayLevel, theme]);
+
+  const { displayValue, pClass, isSpecialRendering, specialContent } = processedData;
+
+  if (isSpecialRendering && specialContent) {
+    return (
+      <div className="w-full min-w-0 overflow-hidden">
+        {specialContent}
+      </div>
+    );
   }
 
   if (columnName === 'traceID') {
     return (
-      <td
-        className={`font-mono h-full text-nowrap hover:underline dark:text-2xl group`}
-        style={{ paddingBottom: '4px', paddingTop: '4px' }}
-      >
-        <div className={pClass}>
-          <a href={options.traceUrl.replace('{{ traceID }}', displayValue)} target="_blank" rel="noreferrer">
-        <span>{displayValue}</span>
+      <div className={pClass}>
+        <a 
+          href={options.traceUrl.replace('{{ traceID }}', displayValue)} 
+          target="_blank" 
+          rel="noreferrer"
+          className="hover:underline truncate min-w-0 flex-1"
+        >
+          <span className="truncate">{displayValue}</span>
+        </a>
         <div
           className={clsx(
-            'group-hover:flex hidden gap-1 absolute right-0 top-0 bg-gradient-to-l from-neutral-100 to-neutral-200/0 pl-20 pr-1 justify-end',
-            theme.isDark ? 'from-neutral-800' : 'from-neutral-100 text-neutral-400'
+            'group-hover:flex hidden gap-1 ml-2 flex-shrink-0',
+            theme.isDark ? 'text-neutral-400' : 'text-neutral-400'
           )}
         >
           <FontAwesomeIcon
             className="cursor-pointer hover:text-neutral-600"
             icon={faMagnifyingGlassPlus}
-            onClick={() => setSelectedFilters(columnName, "=", displayValue, "add")}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedFilters(columnName, "=", displayValue, "add");
+            }}
           />
           <FontAwesomeIcon
             className="cursor-pointer hover:text-neutral-600"
             icon={faMagnifyingGlassMinus}
-            onClick={() => setSelectedFilters(columnName, "!=", displayValue, "add")}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedFilters(columnName, "!=", displayValue, "add");
+            }}
           />
         </div>
-          </a>
-        </div>
-      </td>
+      </div>
     );
   }
 
   return (
-    <td className={`font-mono h-full text-nowrap group`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
-      <div className={pClass}>
-        <span>{displayValue}</span>
-        <div
-          className={clsx(
-            'group-hover:flex hidden gap-1 absolute right-0 top-0 bg-gradient-to-l from-neutral-100 to-neutral-200/0 pl-20 pr-1 justify-end',
-            theme.isDark ? 'from-neutral-800' : 'from-neutral-100 text-neutral-400'
-          )}
-        >
-          <FontAwesomeIcon
-            className="cursor-pointer hover:text-neutral-600"
-            icon={faMagnifyingGlassPlus}
-            onClick={() => setSelectedFilters(columnName, "=", displayValue, "add")}
-          />
-          <FontAwesomeIcon
-            className="cursor-pointer hover:text-neutral-600"
-            icon={faMagnifyingGlassMinus}
-            onClick={() => setSelectedFilters(columnName, "!=", displayValue, "add")}
-          />
-        </div>
+    <div className={pClass}>
+      <span className={clsx(
+        'truncate min-w-0 flex-1',
+        columnName === 'body' ? 'font-mono text-xs' : ''
+      )}>
+        {displayValue}
+      </span>
+      <div
+        className={clsx(
+          'group-hover:flex hidden gap-1 ml-2 flex-shrink-0',
+          theme.isDark ? 'text-neutral-400' : 'text-neutral-400'
+        )}
+      >
+        <FontAwesomeIcon
+          className="cursor-pointer hover:text-neutral-600"
+          icon={faMagnifyingGlassPlus}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedFilters(columnName, "=", displayValue, "add");
+          }}
+        />
+        <FontAwesomeIcon
+          className="cursor-pointer hover:text-neutral-600"
+          icon={faMagnifyingGlassMinus}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedFilters(columnName, "!=", displayValue, "add");
+          }}
+        />
       </div>
-    </td>
+    </div>
   );
-};
+});
+
+TableData.displayName = 'TableData';

@@ -24,46 +24,42 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ fields, rowIndex }) => {
   });
 
   return (
-    <tr>
-      <td colSpan={100}>
-        <div
-          className={clsx(
-            'p-8 border-1 rounded-lg m-8 shadow-lg',
-            theme.isDark ? 'bg-[#111217] border-neutral-200/20' : 'bg-neutral-50 border-neutral-200'
-          )}
-        >
-          <table>
-            {Object.entries(keyVals).map(([k, v]) => {
-              return (
-                <tr
-                  key={k}
-                  className={clsx(
-                    'font-mono',
-                    theme.isDark ? 'hover:bg-neutral-200/20' : 'hover:bg-neutral-200'
-                  )}
-                >
-                  <td className={`font-semibold`}>{k}:</td>
-                  <td>{v}</td>
-                </tr>
-              );
-            })}
-            {Object.entries(labelVals).map(([k, v]) => {
-              return (
-                <tr
-                  key={k}
-                  className={clsx(
-                    'font-mono',
-                    theme.isDark ? 'hover:bg-neutral-200/20' : 'hover:bg-neutral-200'
-                  )}
-                >
-                  <td className={`font-semibold`}>{k}:</td>
-                  <td>{v}</td>
-                </tr>
-              );
-            })}
-          </table>
-        </div>
-      </td>
-    </tr>
+    <div
+      className={clsx(
+        'p-8 border-1 rounded-lg m-8 shadow-lg',
+        theme.isDark ? 'bg-[#111217] border-neutral-200/20' : 'bg-neutral-50 border-neutral-200'
+      )}
+    >
+      <table>
+        {Object.entries(keyVals).map(([k, v]) => {
+          return (
+            <tr
+              key={k}
+              className={clsx(
+                'font-mono',
+                theme.isDark ? 'hover:bg-neutral-200/20' : 'hover:bg-neutral-200'
+              )}
+            >
+              <td className={`font-semibold`}>{k}:</td>
+              <td>{v}</td>
+            </tr>
+          );
+        })}
+        {Object.entries(labelVals).map(([k, v]) => {
+          return (
+            <tr
+              key={k}
+              className={clsx(
+                'font-mono',
+                theme.isDark ? 'hover:bg-neutral-200/20' : 'hover:bg-neutral-200'
+              )}
+            >
+              <td className={`font-semibold`}>{k}:</td>
+              <td>{v}</td>
+            </tr>
+          );
+        })}
+      </table>
+    </div>
   );
 };
