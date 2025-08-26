@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TableData } from './TableData';
 import { LogDetails } from './LogDetails';
 
-import { SimpleOptions } from 'types';
+import { SimpleOptions, FilterOperation } from 'types';
 import { useTheme2 } from '@grafana/ui';
 import clsx from 'clsx';
 
@@ -11,14 +11,20 @@ export interface TableRowProps {
   showLabel: boolean;
 }
 
-export const createTableRow = (options: SimpleOptions, keys: string[], fields: any[]) => {
-  const theme = useTheme2();
+export const createTableRow = (options: SimpleOptions, keys: string[], fields: any[], setSelectedFilters: (
+    key: string,
+    operation: FilterOperation,
+    value: any,
+    op: "add" | "rm"
+  ) => void) => {
+
   const keyIndexMap = fields.reduce((acc, field, idx) => {
     acc[field.name] = idx;
     return acc;
   }, {} as { [key: string]: number });
 
   const TableRowWithKeys: React.FC<TableRowProps> = ({ rowIndex, showLabel }) => {
+    const theme = useTheme2();
     const [showDetails, setShowDetails] = useState<boolean>(false);
 
     const onClick = () => {
@@ -44,7 +50,7 @@ export const createTableRow = (options: SimpleOptions, keys: string[], fields: a
           onClick={onClick}
         >
           {rowData.map((value, idx) => (
-            <TableData options={options} key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} />
+            <TableData options={options} key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} setSelectedFilters={setSelectedFilters}/>
           ))}
         </tr>
         {showDetails && <LogDetails fields={fields} rowIndex={rowIndex} />}

@@ -3,7 +3,7 @@ import { Field } from '@grafana/data';
 import { createTableRow } from './TableRow';
 import { TableHeader } from './TableHeader';
 
-import { SimpleOptions } from 'types';
+import { SimpleOptions, FilterOperation } from 'types';
 
 import { useTheme2 } from '@grafana/ui';
 import clsx from 'clsx';
@@ -13,12 +13,18 @@ export interface TableProps {
   fields: Field[];
   keys: string[];
   showLevel: boolean;
+  setSelectedFilters: (
+    key: string,
+    operation: FilterOperation,
+    value: any,
+    op: "add" | "rm"
+  ) => void;
   // columnName: string;
   // value: any;
   // level: string;
 }
 
-export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel }) => {
+export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, setSelectedFilters }) => {
   const theme = useTheme2();
 
   const [sortField, setSortField] = useState<string>('timestamp');
@@ -71,7 +77,7 @@ export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel }
     });
   }, [fields, sortField, sortDirection, rowCount]);
 
-  const TableRowWithKeys = createTableRow(options, keys, fields);
+  const TableRowWithKeys = createTableRow(options, keys, fields, setSelectedFilters);
 
   return (
     <div

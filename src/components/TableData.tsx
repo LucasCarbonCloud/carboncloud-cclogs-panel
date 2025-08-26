@@ -1,23 +1,31 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import { SimpleOptions } from 'types';
+import { SimpleOptions, FilterOperation } from 'types';
 
 import { getTemplateSrv } from '@grafana/runtime';
 import { useTheme2 } from '@grafana/ui';
 import clsx from 'clsx';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlassPlus, faMagnifyingGlassMinus } from '@fortawesome/free-solid-svg-icons';
 
 export interface TableDataProps {
   options: SimpleOptions;
   columnName: string;
   value: any;
   displayLevel: boolean;
+  setSelectedFilters: (
+    key: string,
+    operation: FilterOperation,
+    value: any,
+    op: "add" | "rm"
+  ) => void;
 }
 
-export const TableData: React.FC<TableDataProps> = ({ options, columnName, value, displayLevel }) => {
+export const TableData: React.FC<TableDataProps> = ({ options, columnName, value, displayLevel, setSelectedFilters }) => {
   const theme = useTheme2();
   let displayValue = value;
-  let pClass = 'px-4';
+  let pClass = 'px-4 flex relative';
 
   // const dateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
   const dateFormat = 'MMM DD HH:mm:ss.SSS';
@@ -78,11 +86,12 @@ export const TableData: React.FC<TableDataProps> = ({ options, columnName, value
                 return (
                   <React.Fragment key={idx}>
                     <p style={{ margin: '0px' }}>{s}</p>
-                    <p style={{ margin: '0px' }}
-                       className={clsx(
-                         'px-1 m-0 bg-fuchsia-200 rounded-lg shadow',
-                         theme.isDark ? 'bg-fuchsia-900' : 'bg-fuchsia-200'
-                       )}
+                    <p
+                      style={{ margin: '0px' }}
+                      className={clsx(
+                        'px-1 m-0 bg-fuchsia-200 rounded-lg shadow',
+                        theme.isDark ? 'bg-fuchsia-900' : 'bg-fuchsia-200'
+                      )}
                     >
                       {searchTerm}
                     </p>
@@ -103,15 +112,58 @@ export const TableData: React.FC<TableDataProps> = ({ options, columnName, value
 
   if (columnName === 'traceID') {
     return (
-      <td className={`font-mono h-full text-nowrap hover:underline dark:text-2xl`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
-      <div className={pClass}><a href={ options.traceUrl.replace("{{ traceID }}", displayValue)} target="_blank" rel="noreferrer">{displayValue}</a></div>
+      <td
+        className={`font-mono h-full text-nowrap hover:underline dark:text-2xl group`}
+        style={{ paddingBottom: '4px', paddingTop: '4px' }}
+      >
+        <div className={pClass}>
+          <a href={options.traceUrl.replace('{{ traceID }}', displayValue)} target="_blank" rel="noreferrer">
+        <span>{displayValue}</span>
+        <div
+          className={clsx(
+            'group-hover:flex hidden gap-1 absolute right-0 top-0 bg-gradient-to-l from-neutral-100 to-neutral-200/0 pl-20 pr-1 justify-end',
+            theme.isDark ? 'from-neutral-800' : 'from-neutral-100 text-neutral-400'
+          )}
+        >
+          <FontAwesomeIcon
+            className="cursor-pointer hover:text-neutral-600"
+            icon={faMagnifyingGlassPlus}
+            onClick={() => setSelectedFilters(columnName, "=", displayValue, "add")}
+          />
+          <FontAwesomeIcon
+            className="cursor-pointer hover:text-neutral-600"
+            icon={faMagnifyingGlassMinus}
+            onClick={() => setSelectedFilters(columnName, "!=", displayValue, "add")}
+          />
+        </div>
+          </a>
+        </div>
       </td>
     );
   }
 
   return (
-    <td className={`font-mono h-full text-nowrap`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
-      <div className={pClass}>{displayValue}</div>
+    <td className={`font-mono h-full text-nowrap group`} style={{ paddingBottom: '4px', paddingTop: '4px' }}>
+      <div className={pClass}>
+        <span>{displayValue}</span>
+        <div
+          className={clsx(
+            'group-hover:flex hidden gap-1 absolute right-0 top-0 bg-gradient-to-l from-neutral-100 to-neutral-200/0 pl-20 pr-1 justify-end',
+            theme.isDark ? 'from-neutral-800' : 'from-neutral-100 text-neutral-400'
+          )}
+        >
+          <FontAwesomeIcon
+            className="cursor-pointer hover:text-neutral-600"
+            icon={faMagnifyingGlassPlus}
+            onClick={() => setSelectedFilters(columnName, "=", displayValue, "add")}
+          />
+          <FontAwesomeIcon
+            className="cursor-pointer hover:text-neutral-600"
+            icon={faMagnifyingGlassMinus}
+            onClick={() => setSelectedFilters(columnName, "!=", displayValue, "add")}
+          />
+        </div>
+      </div>
     </td>
   );
 };

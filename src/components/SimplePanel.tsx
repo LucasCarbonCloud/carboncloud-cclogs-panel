@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PanelProps, Field } from '@grafana/data';
-import { SimpleOptions } from 'types';
+import { SimpleOptions, Filter, FilterOperation } from 'types';
 import { PanelDataErrorView, getTemplateSrv, locationService } from '@grafana/runtime';
 import '../style.js';
 import { Table } from './Table';
@@ -12,20 +12,20 @@ interface Props extends PanelProps<SimpleOptions> {}
 import { Searchbar } from './Components';
 import { Overview } from './Overview';
 
+
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
 
   const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
   const [selectedFields, setSelectedFields] = useState<string[]>(keys);
+  const [selectedFilters, setSelectedFilters] = useState<Filter[]>([]);
   const [showLevel, setShowLevel] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>(getTemplateSrv().replace('$searchTerm'));
 
   if (data.series.length !== 1) {
     return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />;
   }
-
-  // locationService.partial({ 'var-searchTerm': 'kube' }, true);
 
   const handleFieldChange = (value: string[], type: string) => {
     if (type === 'label') {
@@ -40,19 +40,54 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
     locationService.partial({ 'var-searchTerm': value }, true);
   };
 
-  // Get all variables
 
-  // Get value of a specific variable (e.g. 'myVar')
-  // const myVar = getTemplateSrv().getVariableValue('myQueryVar');
 
-  // Access current value (e.g. selected option(s))
-  // const currentValue = myVar?.global;
+  const handleSetFilterTerm = (
+    key: string,
+    operation: FilterOperation,
+    value: any,
+    op: "add" | "rm"
+  ) => {
+    setSelectedFilters(prevFilters => {
+      if ( key == "timestamp" ) {
+        return prevFilters
+      }
+      const exists = prevFilters.some(
+        f => f.key === key && f.operation === operation && f.value === value
+      );
 
-  // If it's a multi-value variable, it could be an array:
-  // const selectedValues = Array.isArray(currentValue) ? currentValue : [currentValue];
+      if (exists) {
+        return prevFilters.filter(
+          f => !(f.key === key && f.operation === operation && f.value === value)
+        );
+      } else {
+        return [...prevFilters, { key, operation, value }];
+      }
+    });
+  };
+
+  const generateFilterString = (filters: Filter[]) => {
+    let outStr = ""
+    for (var i=0; i < filters.length; i++) {
+      let key = filters[i].key
+      let operation = filters[i].operation
+      let value = filters[i].value
+
+      if (key.startsWith("labels.")) {
+        let logKey = key.split(".").slice(1).join(".");
+        key = `LogAttributes['${logKey}']`
+      }
+      outStr += ` AND ( ${key} ${operation} '${value}' )`
+    }
+    return outStr
+  };
+
+  useEffect(() => {
+    const filterString = generateFilterString(selectedFilters);
+    locationService.partial({ 'var-filter_conditions': filterString}, true);
+  }, [selectedFilters]);
 
   const fields = data.series[0].fields;
-  // const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
   let labels: string[] = [];
 
   fields.forEach((field: Field) => {
@@ -67,10 +102,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
       });
     }
   });
-
-  // const apps = getOptionsForVariable('app');
-
-  // locationService.partial({ 'var-app': ['beaker', 'pahtak'] }, true);
 
   const fieldsList = getFieldNames(keys, selectedFields, selectedLabels);
   labels = labels.sort();
@@ -91,11 +122,13 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
           showLevel={showLevel}
           setShowLevel={setShowLevel}
           onChange={handleFieldChange}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={handleSetFilterTerm}
         />
       </div>
       <div className="flex flex-col flex-grow gap-4 px-2">
         <Searchbar searchTerm={searchTerm} onChange={handleSearchTermChange} />
-        <Table options={options} fields={fields} keys={fieldsList} showLevel={showLevel} />
+        <Table options={options} fields={fields} keys={fieldsList} showLevel={showLevel} setSelectedFilters={handleSetFilterTerm} />
       </div>
     </div>
   );

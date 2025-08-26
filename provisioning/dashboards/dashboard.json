@@ -40,9 +40,10 @@
       "options": {
         "seriesCountSize": "sm",
         "showSeriesCount": false,
-        "text": "Default value of text input option"
+        "text": "Default value of text input option",
+        "traceUrl": "{{ traceID }}"
       },
-      "pluginVersion": "1.0.0",
+      "pluginVersion": "1.0.2",
       "targets": [
         {
           "datasource": {
@@ -61,9 +62,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.10.1",
+          "pluginVersion": "4.10.2",
           "queryType": "table",
-          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\" ,\n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) \n  AND ( LogAttributes['app'] IN (${app}) )\n  AND ( LogAttributes['component'] IN (${component}) )\n  AND ( LogAttributes['team'] IN (${team}) OR LogAttributes['team'] == '' )    \n  AND (body LIKE '%${searchTerm}%')\n  AND level IN (${logLevel})\n  AND ( LogAttributes['${customValKey1}'] LIKE '%${customValVal1}%' )  \n  AND ( LogAttributes['${customValKey2}'] LIKE '%${customValVal2}%' )  \n  AND ('${traceId}' = '' OR traceID = '${traceId}') \nORDER BY timestamp DESC LIMIT 1000",
+          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\" ,\n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) \n  AND ( LogAttributes['app'] IN (${app}) )\n  AND ( LogAttributes['component'] IN (${component}) )\n  AND ( LogAttributes['team'] IN (${team}) OR LogAttributes['team'] == '' )    \n  AND (body LIKE '%${searchTerm}%')\n  AND level IN (${logLevel})\n  AND ( LogAttributes['${customValKey1}'] LIKE '%${customValVal1}%' )  \n  AND ( LogAttributes['${customValKey2}'] LIKE '%${customValVal2}%' )  \n  AND ('${traceId}' = '' OR traceID = '${traceId}')\n  ${filter_conditions} \nORDER BY timestamp DESC LIMIT 1000",
           "refId": "A"
         }
       ],
@@ -129,8 +130,12 @@
       },
       {
         "current": {
-          "text": ["$__all"],
-          "value": ["$__all"]
+          "text": [
+            "$__all"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "includeAll": true,
         "label": "Log Level",
@@ -169,7 +174,9 @@
       {
         "current": {
           "text": "All",
-          "value": ["$__all"]
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
@@ -188,8 +195,10 @@
       },
       {
         "current": {
-          "text": ["All"],
-          "value": ["$__all"]
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
@@ -293,6 +302,22 @@
         ],
         "query": "",
         "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "name": "filter_conditions",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
       }
     ]
   },
@@ -304,5 +329,5 @@
   "timezone": "",
   "title": "Provisioned cc-logs dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 5
+  "version": 1
 }
