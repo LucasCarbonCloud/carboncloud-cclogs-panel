@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Field } from '@grafana/data';
-import { createTableRow } from './TableRow';
-import { TableHeader } from './TableHeader';
+// import { createTableRow } from './TableRow';
+// import { TableHeader } from './TableHeader';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
 import dayjs from 'dayjs';
@@ -26,6 +26,7 @@ export interface TableProps {
     value: any,
     op: "add" | "rm"
   ) => void;
+  setLogDetails: (idx: number | undefined) => void;
   // columnName: string;
   // value: any;
   // level: string;
@@ -89,7 +90,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
     if (searchTerm !== '' && searchTerm.length > 1) {
       const parts = value.split(searchTerm);
       return (
-        <div className="flex items-center font-mono text-sm truncate overflow-hidden group relative">
+        <div className="flex overflow-hidden relative items-center font-mono text-sm truncate group">
           <div className="truncate">
             {parts.map((part: string, idx: number) => {
               if (idx === parts.length - 1) {
@@ -141,9 +142,9 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
 
   if (columnName === 'traceID') {
     return (
-      <div className="font-mono text-sm truncate hover:underline group relative">
+      <div className="relative font-mono text-sm hover:underline truncate group">
         <a href={options.traceUrl.replace('{{ traceID }}', displayValue)} target="_blank" rel="noreferrer">
-          <span className="truncate block">{displayValue}</span>
+          <span className="block truncate">{displayValue}</span>
         </a>
         <div className={clsx(
           'group-hover:flex hidden gap-1 absolute right-0 top-0 bg-gradient-to-l pl-20 pr-1 justify-end',
@@ -171,8 +172,8 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
   }
 
   return (
-    <div className="font-mono text-sm truncate group relative">
-      <span className="truncate block">{displayValue}</span>
+    <div className="relative font-mono text-sm truncate group">
+      <span className="block truncate">{displayValue}</span>
       <div className={clsx(
         'group-hover:flex hidden gap-1 absolute right-0 top-0 bg-gradient-to-l pl-20 pr-1 justify-end',
         theme.isDark ? 'from-neutral-800' : 'from-neutral-100 text-neutral-400'
@@ -198,7 +199,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
   );
 };
 
-export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, setSelectedFilters }) => {
+export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, setSelectedFilters, setLogDetails }) => {
   const theme = useTheme2();
 
   const [sortField, setSortField] = useState<string>('timestamp');
@@ -272,7 +273,7 @@ export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, 
     });
   }, [fields, sortField, sortDirection, rowCount]);
 
-  const TableRowWithKeys = createTableRow(options, keys, fields, setSelectedFilters);
+  // const TableRowWithKeys = createTableRow(options, keys, fields, setSelectedFilters);
 
   const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
     const rowIndex = sortedRowIndices[index];
@@ -301,6 +302,7 @@ export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, 
           paddingLeft: '0.75rem',
           paddingRight: '0.75rem'
         }}
+      onClick={() => setLogDetails(index)}
         className={clsx(
           'cursor-pointer border-b-1 hover:bg-neutral-50 text-sm',
           theme.isDark ? 'border-b-neutral-200/20 hover:bg-neutral-50/20' : 'border-b-neutral-200 hover:bg-neutral-50'

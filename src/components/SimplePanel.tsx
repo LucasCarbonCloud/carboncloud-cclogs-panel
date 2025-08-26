@@ -11,6 +11,7 @@ interface Props extends PanelProps<SimpleOptions> {}
 
 import { Searchbar } from './Components';
 import { Overview } from './Overview';
+import { LogDetails } from './LogDetails';
 
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
@@ -22,6 +23,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>([]);
   const [showLevel, setShowLevel] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>(getTemplateSrv().replace('$searchTerm'));
+
+  const [logDetails, setLogDetails] = useState<number | undefined>(undefined);
 
   if (data.series.length !== 1) {
     return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />;
@@ -40,7 +43,13 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
     locationService.partial({ 'var-searchTerm': value }, true);
   };
 
-
+  const handleSetLogDetails = (row: number | undefined) => {
+    if (logDetails == row) {
+      setLogDetails(undefined)
+      return
+    }
+    setLogDetails(row)
+  };
 
   const handleSetFilterTerm = (
     key: string,
@@ -128,8 +137,9 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
       </div>
       <div className="flex flex-col flex-grow gap-4 px-2">
         <Searchbar searchTerm={searchTerm} onChange={handleSearchTermChange} />
-        <Table options={options} fields={fields} keys={fieldsList} showLevel={showLevel} setSelectedFilters={handleSetFilterTerm} />
+        <Table options={options} fields={fields} keys={fieldsList} showLevel={showLevel} setSelectedFilters={handleSetFilterTerm} setLogDetails={handleSetLogDetails} />
       </div>
+        {logDetails != undefined && <LogDetails fields={fields} rowIndex={logDetails}/>}
     </div>
   );
 };

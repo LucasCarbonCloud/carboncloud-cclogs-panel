@@ -31,7 +31,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 38,
+        "h": 31,
         "w": 24,
         "x": 0,
         "y": 0
@@ -116,6 +116,7 @@
           "text": "",
           "value": ""
         },
+        "hide": 2,
         "label": "Trace ID",
         "name": "traceId",
         "options": [
@@ -137,6 +138,7 @@
             "$__all"
           ]
         },
+        "hide": 2,
         "includeAll": true,
         "label": "Log Level",
         "multi": true,
@@ -183,6 +185,7 @@
           "uid": "${datasource}"
         },
         "definition": "SELECT DISTINCT app_materialized AS app\nFROM \"otel_logs\"\nWHERE app != '' AND app IS NOT NULL\nORDER BY app;",
+        "hide": 2,
         "includeAll": true,
         "label": "App",
         "multi": true,
@@ -205,6 +208,7 @@
           "uid": "${datasource}"
         },
         "definition": "SELECT DISTINCT component_materialized AS component\nFROM \"otel_logs\"\nWHERE component != '' AND component IS NOT NULL\nORDER BY component;",
+        "hide": 2,
         "includeAll": true,
         "label": "Component",
         "multi": true,
@@ -225,6 +229,7 @@
           "uid": "${datasource}"
         },
         "definition": "SELECT DISTINCT LogAttributes['team'] AS team\nFROM \"otel_logs\"\nWHERE LogAttributes['team'] != '' AND LogAttributes['team'] IS NOT NULL\nORDER BY team;",
+        "hide": 2,
         "includeAll": true,
         "label": "Team",
         "multi": true,
@@ -240,6 +245,7 @@
           "text": "",
           "value": ""
         },
+        "hide": 2,
         "label": "Filter A Key:",
         "name": "customValKey1",
         "options": [
@@ -257,6 +263,7 @@
           "text": "",
           "value": ""
         },
+        "hide": 2,
         "label": "Filter A Value:",
         "name": "customValVal1",
         "options": [
@@ -274,6 +281,7 @@
           "text": "",
           "value": ""
         },
+        "hide": 2,
         "label": "Filter B Key:",
         "name": "customValKey2",
         "options": [
@@ -291,6 +299,7 @@
           "text": "",
           "value": ""
         },
+        "hide": 2,
         "label": "Filter B Value:",
         "name": "customValVal2",
         "options": [
@@ -308,6 +317,7 @@
           "text": "",
           "value": ""
         },
+        "hide": 2,
         "name": "filter_conditions",
         "options": [
           {
@@ -322,12 +332,12 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-90d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Provisioned cc-logs dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 1
+  "version": 2
 }
