@@ -27,9 +27,6 @@ export interface TableProps {
     op: "add" | "rm"
   ) => void;
   setLogDetails: (idx: number | undefined) => void;
-  // columnName: string;
-  // value: any;
-  // level: string;
 }
 
 interface CellContentProps {

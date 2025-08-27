@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { TableData } from './TableData';
-import { LogDetails } from './LogDetails';
 
 import { SimpleOptions, FilterOperation } from 'types';
 import { useTheme2 } from '@grafana/ui';
@@ -53,7 +52,6 @@ export const createTableRow = (options: SimpleOptions, keys: string[], fields: a
             <TableData options={options} key={keys[idx]} columnName={keys[idx]} value={value} displayLevel={showLabel} setSelectedFilters={setSelectedFilters}/>
           ))}
         </tr>
-        {showDetails && <LogDetails fields={fields} rowIndex={rowIndex} />}
       </>
     );
   };

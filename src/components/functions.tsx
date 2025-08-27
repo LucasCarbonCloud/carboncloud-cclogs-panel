@@ -1,5 +1,6 @@
 import { getTemplateSrv } from '@grafana/runtime';
 import { VariableOption } from '@grafana/data';
+import dayjs from 'dayjs';
 
 export function prettifyHeaderNames(name: string, displayLevel: boolean) {
   if (name.startsWith('labels.')) {
@@ -52,4 +53,46 @@ export function truncateString(str: string, num: number) {
   } else {
     return str;
   }
+}
+
+
+export function timeAgo(timestamp: string) {
+  const now = dayjs();
+  const then = dayjs(timestamp);
+  const diffInSeconds = now.diff(then, "second");
+
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} second${diffInSeconds !== 1 ? "s" : ""} ago`;
+  }
+
+  const diffInMinutes = now.diff(then, "minute");
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? "s" : ""} ago`;
+  }
+
+  const diffInHours = now.diff(then, "hour");
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? "s" : ""} ago`;
+  }
+
+  const diffInDays = now.diff(then, "day");
+  return `${diffInDays} day${diffInDays !== 1 ? "s" : ""} ago`;
+}
+
+export function stringToDarkColor(str: string): string {
+  // Simple hash
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    hash = hash & hash; // Convert to 32bit integer
+  }
+
+  // Generate RGB values
+  const r = (hash & 0xFF) % 100; // keep low for dark
+  const g = ((hash >> 8) & 0xFF) % 100;
+  const b = ((hash >> 16) & 0xFF) % 100;
+
+  // Convert to hex
+  const toHex = (n: number) => n.toString(16).padStart(2, "0");
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }

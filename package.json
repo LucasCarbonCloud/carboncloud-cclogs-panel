@@ -1,6 +1,6 @@
 {
   "name": "cc-logs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
@@ -68,6 +68,7 @@
   "dependencies": {
     "@emotion/css": "11.10.6",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^7.0.0",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@grafana/data": "^12.0.2",
