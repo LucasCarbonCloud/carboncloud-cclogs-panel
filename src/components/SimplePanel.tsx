@@ -12,13 +12,13 @@ interface Props extends PanelProps<SimpleOptions> {}
 import { Searchbar } from './Components';
 import { Overview } from './Overview';
 import { LogDetails } from './LogDetails';
-import { generateFilterString, parseFilterString } from './functions';
+import { generateFilterString, parseFilterString, parseSelectedKeys } from './functions';
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
   const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
 
-  const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
-  const [selectedFields, setSelectedFields] = useState<string[]>(keys);
+  const [selectedLabels, setSelectedLabels] = useState<string[]>(parseSelectedKeys(getTemplateSrv().replace('$selectedLabels')));
+  const [selectedFields, setSelectedFields] = useState<string[]>(parseSelectedKeys(getTemplateSrv().replace('$selectedKeys')));
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>(parseFilterString(getTemplateSrv().replace('$filter_conditions')));
   const [showLevel, setShowLevel] = useState<boolean>(false);
   const [tableLineHeight, setTableLineHeight] = useState<number>(Number(getTemplateSrv().replace('$tableLineHeight')));
@@ -38,8 +38,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   const handleFieldChange = (value: string[], type: string) => {
     if (type === 'label') {
       setSelectedLabels(value);
+      locationService.partial({ 'var-selectedLabels': value.join(",") }, true);
     } else if (type === 'field') {
       setSelectedFields(value);
+      locationService.partial({ 'var-selectedKeys': value.join(",") }, true);
     }
   };
 

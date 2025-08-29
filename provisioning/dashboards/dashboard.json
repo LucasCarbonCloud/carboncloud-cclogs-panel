@@ -331,29 +331,63 @@
       },
       {
         "current": {
-          "text": "sdf",
-          "value": "sdf"
+          "text": "35",
+          "value": "35"
         },
         "name": "tableLineHeight",
         "options": [
           {
             "selected": true,
-            "text": "sdf",
-            "value": "sdf"
+            "text": "35",
+            "value": "35"
           }
         ],
-        "query": "sdf",
+        "query": "35",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "body,timestamp,level",
+          "value": "body,timestamp,level"
+        },
+        "description": "",
+        "name": "selectedKeys",
+        "options": [
+          {
+            "selected": true,
+            "text": "body,timestamp,level",
+            "value": "body,timestamp,level"
+          }
+        ],
+        "query": "body,timestamp,level",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "labels.app, labels.component, labels.team",
+          "value": "labels.app, labels.component, labels.team"
+        },
+        "description": "",
+        "name": "selectedLabels",
+        "options": [
+          {
+            "selected": true,
+            "text": "labels.app, labels.component, labels.team",
+            "value": "labels.app, labels.component, labels.team"
+          }
+        ],
+        "query": "labels.app, labels.component, labels.team",
         "type": "textbox"
       }
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Provisioned cc-logs dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 5
+  "version": 7
 }

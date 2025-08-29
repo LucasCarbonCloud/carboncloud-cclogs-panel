@@ -143,3 +143,9 @@ export function parseFilterString(str: string): Filter[] {
      return element !== undefined;
   })
 }
+
+export function parseSelectedKeys(str: string): string[] {
+  return str.split(",").map((s: string) => {
+    return s.trim()
+  })
+}
