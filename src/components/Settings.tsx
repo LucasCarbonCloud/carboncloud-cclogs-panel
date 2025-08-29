@@ -76,10 +76,10 @@ export const Settings: React.FC<SettingsProps> = ({
           theme.isDark ? 'border-neutral-200/20' : 'border-neutral-200'
         )}
       >
-        <FilterCmp field={'logLevel'} showName="Log Level" />
-        <FilterCmp field={'app'} showName="app" />
-        <FilterCmp field={'component'} showName="component" />
-        <FilterCmp field={'team'} showName="team" />
+        <FilterCmp field={'logLevel'} showName="Log Level" isOpen={true} />
+        <FilterCmp field={'app'} showName="app" isOpen={false} />
+        <FilterCmp field={'component'} showName="component" isOpen={false} />
+        <FilterCmp field={'team'} showName="team" isOpen={false} />
       </div>
       <div className="flex flex-col gap-2 p-2 my-2 w-80">
         {selectedFilters.map((filter) => (

@@ -10,17 +10,17 @@ import clsx from 'clsx';
 export interface FilterProps {
   field: string;
   showName: string;
-  // isChecked: boolean;
+  isOpen: boolean;
   // onChange: (field: string) => void;
 }
 
-export const Filter: React.FC<FilterProps> = ({ field, showName }) => {
+export const Filter: React.FC<FilterProps> = ({ field, showName, isOpen }) => {
   const theme = useTheme2();
 
   const options = getOptionsForVariable(field);
   const selected = getValuesForVariable(field);
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(isOpen);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(selected);
 
   const onClick = () => {
