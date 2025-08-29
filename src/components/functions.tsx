@@ -1,6 +1,7 @@
 import { getTemplateSrv } from '@grafana/runtime';
 import { VariableOption } from '@grafana/data';
 import dayjs from 'dayjs';
+import { Filter, FilterOperation } from 'types';
 
 export function prettifyHeaderNames(name: string, displayLevel: boolean) {
   if (name.startsWith('labels.')) {
@@ -95,4 +96,50 @@ export function stringToDarkColor(str: string): string {
   // Convert to hex
   const toHex = (n: number) => n.toString(16).padStart(2, "0");
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export const generateFilterString = (filters: Filter[]) => {
+  let outStr = '';
+  for (let i = 0; i < filters.length; i++) {
+    let key = filters[i].key;
+    let operation = filters[i].operation;
+    let value = filters[i].value;
+
+    if (key.startsWith('labels.')) {
+      let logKey = key.split('.').slice(1).join('.');
+      key = `LogAttributes['${logKey}']`;
+    }
+    outStr += ` AND ( ${key} ${operation} '${value}' )`;
+  }
+  return outStr;
+};
+
+export function parseFilterString(str: string): Filter[] {
+  const regex = /\(\s*(.*?)\s*\)/g;
+  const matches = [...str.matchAll(regex)].map(m => m[1]);
+
+  const f = matches.map((fStr: string): Filter|undefined => {
+    if (fStr.includes("LogAttributes[")) {
+      const regex = /LogAttributes\['([^']+)'\]\s*(=|!=)\s*'([^']+)'/;
+      const match = fStr.match(regex);
+      
+      if (match) {
+        const [, key, operator, value] = match;
+        return {key: "labels." +key, operation: operator as FilterOperation, value:value}
+      }
+    } else {
+      const regex = /([^']+)\s*(=|!=)\s*'([^']+)'/;
+      const match = fStr.match(regex);
+
+      if (match) {
+        const [, key, operator, value] = match;
+        return {key: key, operation: operator as FilterOperation, value:value}
+      }
+    }
+    return undefined
+  })
+
+  return f.filter(function( element ) {
+     return element !== undefined;
+  })
 }

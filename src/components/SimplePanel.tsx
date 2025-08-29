@@ -12,33 +12,18 @@ interface Props extends PanelProps<SimpleOptions> {}
 import { Searchbar } from './Components';
 import { Overview } from './Overview';
 import { LogDetails } from './LogDetails';
+import { generateFilterString, parseFilterString } from './functions';
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
   const keys = ['level', 'timestamp', 'traceID', 'spanID', 'body'];
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>(['labels.app', 'labels.component', 'labels.team']);
   const [selectedFields, setSelectedFields] = useState<string[]>(keys);
-  const [selectedFilters, setSelectedFilters] = useState<Filter[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<Filter[]>(parseFilterString(getTemplateSrv().replace('$filter_conditions')));
   const [showLevel, setShowLevel] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>(getTemplateSrv().replace('$searchTerm'));
 
   const [logDetails, setLogDetails] = useState<number | undefined>(undefined);
-
-  const generateFilterString = (filters: Filter[]) => {
-    let outStr = '';
-    for (let i = 0; i < filters.length; i++) {
-      let key = filters[i].key;
-      let operation = filters[i].operation;
-      let value = filters[i].value;
-
-      if (key.startsWith('labels.')) {
-        let logKey = key.split('.').slice(1).join('.');
-        key = `LogAttributes['${logKey}']`;
-      }
-      outStr += ` AND ( ${key} ${operation} '${value}' )`;
-    }
-    return outStr;
-  };
 
   useEffect(() => {
     const filterString = generateFilterString(selectedFilters);
