@@ -20,6 +20,7 @@ export interface TableProps {
   fields: Field[];
   keys: string[];
   showLevel: boolean;
+  lineHeight: number;
   setSelectedFilters: (
     key: string,
     operation: FilterOperation,
@@ -196,7 +197,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
   );
 };
 
-export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, setSelectedFilters, setLogDetails }) => {
+export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, lineHeight, setSelectedFilters, setLogDetails }) => {
   const theme = useTheme2();
 
   const [sortField, setSortField] = useState<string>('timestamp');
@@ -388,7 +389,7 @@ export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, 
               height={height}
               width={width}
               itemCount={rowCount}
-              itemSize={35}
+              itemSize={lineHeight}
             >
               {Row}
             </List>

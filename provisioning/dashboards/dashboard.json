@@ -328,16 +328,32 @@
         ],
         "query": "",
         "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "sdf",
+          "value": "sdf"
+        },
+        "name": "tableLineHeight",
+        "options": [
+          {
+            "selected": true,
+            "text": "sdf",
+            "value": "sdf"
+          }
+        ],
+        "query": "sdf",
+        "type": "textbox"
       }
     ]
   },
   "time": {
-    "from": "now-90d",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Provisioned cc-logs dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 2
+  "version": 5
 }

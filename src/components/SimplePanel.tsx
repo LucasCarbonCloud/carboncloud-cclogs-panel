@@ -21,6 +21,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   const [selectedFields, setSelectedFields] = useState<string[]>(keys);
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>(parseFilterString(getTemplateSrv().replace('$filter_conditions')));
   const [showLevel, setShowLevel] = useState<boolean>(false);
+  const [tableLineHeight, setTableLineHeight] = useState<number>(Number(getTemplateSrv().replace('$tableLineHeight')));
   const [searchTerm, setSearchTerm] = useState<string>(getTemplateSrv().replace('$searchTerm'));
 
   const [logDetails, setLogDetails] = useState<number | undefined>(undefined);
@@ -45,6 +46,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
   const handleSearchTermChange = (value: string) => {
     setSearchTerm(value);
     locationService.partial({ 'var-searchTerm': value }, true);
+  };
+
+  const handleTableLineHeight= (value: number) => {
+    setTableLineHeight(value);
+    locationService.partial({ 'var-tableLineHeight': value }, true);
   };
 
   const handleSetLogDetails = (row: number | undefined) => {
@@ -101,6 +107,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
           selectedLabels={selectedLabels}
           showLevel={showLevel}
           setShowLevel={setShowLevel}
+          tableLineHeight={tableLineHeight}
+          setTableLineHeight={handleTableLineHeight}
           onChange={handleFieldChange}
           selectedFilters={selectedFilters}
           setSelectedFilters={handleSetFilterTerm}
@@ -113,6 +121,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
           fields={fields}
           keys={fieldsList}
           showLevel={showLevel}
+          lineHeight={tableLineHeight}
           setSelectedFilters={handleSetFilterTerm}
           setLogDetails={handleSetLogDetails}
         />

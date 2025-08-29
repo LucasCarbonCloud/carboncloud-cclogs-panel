@@ -8,7 +8,7 @@ import { stringToDarkColor, timeAgo } from './functions';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faCopy, faCode, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
-import { faGolang, faPython, faHireAHelper } from '@fortawesome/free-brands-svg-icons';
+import { faGolang, faPython, faHackerrank} from '@fortawesome/free-brands-svg-icons';
 import { SimpleOptions } from 'types';
 
 export interface LogDetailsProps {
@@ -39,7 +39,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
   const languageIcons = {
     python: faPython,
     go: faGolang,
-    haskell: faHireAHelper,
+    haskell: faHackerrank,
     other: faCode
   } as const;
 

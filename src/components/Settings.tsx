@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldSelector } from './Components';
+import { FieldSelector, NumberInput } from './Components';
 import { Filter as FilterCmp } from './Filter';
 import { useTheme2 } from '@grafana/ui';
 import clsx from 'clsx';
@@ -16,6 +16,8 @@ export interface SettingsProps {
   selectedLabels: string[];
   showLevel: boolean;
   setShowLevel: (showLevel: boolean) => void;
+  tableLineHeight: number;
+  setTableLineHeight: (value: number) => void;
   onChange: (selected: string[], changeType: string) => void;
   selectedFilters: Filter[];
   setSelectedFilters: (
@@ -33,6 +35,8 @@ export const Settings: React.FC<SettingsProps> = ({
   selectedLabels,
   showLevel,
   setShowLevel,
+  tableLineHeight,
+  setTableLineHeight,
   onChange,
   selectedFilters,
   setSelectedFilters
@@ -107,6 +111,7 @@ export const Settings: React.FC<SettingsProps> = ({
         )}
       >Settings</p>
       <FieldSelector field="Show level text" isChecked={showLevel} hidden={false} onChange={handleShowLevelChange} />
+      <NumberInput name="Line spacing" value={tableLineHeight} maxValue={50} minValue={10} step={1} hidden={false} onChange={setTableLineHeight}/>
       <p
         className={clsx(
           'h-2 font-semibold uppercase pt-5 pb-3',
