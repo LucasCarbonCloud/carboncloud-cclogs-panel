@@ -7,6 +7,7 @@ import { Filter, FilterOperation } from 'types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { MenuItemWrapper } from './Menu';
 
 
 export interface SettingsProps {
@@ -85,7 +86,7 @@ export const Settings: React.FC<SettingsProps> = ({
         <FilterCmp field={'component'} showName="component" isOpen={false} />
         <FilterCmp field={'team'} showName="team" isOpen={false} />
       </div>
-      <div className="flex flex-col gap-2 p-2 my-2 w-80">
+      <div className="flex flex-col gap-2 p-2 my-2 mb-6 w-80">
         {selectedFilters.map((filter) => (
           <div
             key={`${filter.key}-${filter.operation}-${filter.value}`}
@@ -103,52 +104,64 @@ export const Settings: React.FC<SettingsProps> = ({
           </div>
         ))}
       </div>
-      <span>More filters will come here..</span>
+
       <p
         className={clsx(
-          'h-2 font-semibold uppercase pt-5 pb-3',
+          'h-2 font-semibold uppercase pb-5',
           theme.isDark ? 'text-neutral-400' : 'text-neutral-700'
         )}
-      >Settings</p>
-      <FieldSelector field="Show level text" isChecked={showLevel} hidden={false} onChange={handleShowLevelChange} />
-      <NumberInput name="Line spacing" value={tableLineHeight} maxValue={50} minValue={10} step={1} hidden={false} onChange={setTableLineHeight}/>
-      <p
+      >Layout</p>
+      <div
         className={clsx(
-          'h-2 font-semibold uppercase pt-5 pb-3',
-          theme.isDark ? 'text-neutral-400' : 'text-neutral-700'
+          'flex flex-col border-b-1',
+          theme.isDark ? 'border-neutral-200/20' : 'border-neutral-200'
         )}
-      >Fields</p>
-      <div className={`gap-1`}>
-        {fields.map((field) => {
-          return (
-            <FieldSelector
-              key={field}
-              field={field}
-              isChecked={selectedFields.includes(field)}
-              hidden={false}
-              onChange={handleFieldChange}
-            />
-          );
-        })}
-      </div>
-      <p
-        className={clsx(
-          'h-2 font-semibold uppercase pt-5 pb-3',
-          theme.isDark ? 'text-neutral-400' : 'text-neutral-700'
-        )}
-      >Labels</p>
-      <div className={`gap-1`}>
-        {labels.map((field) => {
-          return (
-            <FieldSelector
-              key={field}
-              field={field}
-              isChecked={selectedLabels.includes(field)}
-              hidden={false}
-              onChange={handleLabelChange}
-            />
-          );
-        })}
+      >
+        <MenuItemWrapper title='Columns' isOpen={true}>
+          <p
+           className={clsx(
+              'h-2 font-semibold uppercase pt-5 pb-3',
+              theme.isDark ? 'text-neutral-400' : 'text-neutral-700'
+            )}
+          >Fields</p>
+          <div className={`gap-1`}>
+            {fields.map((field) => {
+              return (
+                <FieldSelector
+                  key={field}
+                  field={field}
+                  isChecked={selectedFields.includes(field)}
+                  hidden={false}
+                  onChange={handleFieldChange}
+                />
+              );
+            })}
+          </div>
+          <p
+            className={clsx(
+              'h-2 font-semibold uppercase pt-5 pb-3',
+              theme.isDark ? 'text-neutral-400' : 'text-neutral-700'
+            )}
+          >Labels</p>
+          <div className={`gap-1`}>
+            {labels.map((field) => {
+              return (
+                <FieldSelector
+                  key={field}
+                  field={field}
+                  isChecked={selectedLabels.includes(field)}
+                  hidden={false}
+                  onChange={handleLabelChange}
+                />
+              );
+            })}
+          </div>
+        </MenuItemWrapper>
+
+        <MenuItemWrapper title='Settings' isOpen={false}>
+          <FieldSelector field="Show level text" isChecked={showLevel} hidden={false} onChange={handleShowLevelChange} />
+          <NumberInput name="Line spacing" value={tableLineHeight} maxValue={50} minValue={10} step={1} hidden={false} onChange={setTableLineHeight}/>
+        </MenuItemWrapper>
       </div>
     </div>
   );
