@@ -36,7 +36,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, fields, labels
   const filterAvailVals: { [key: string]: string[] } = {};
 
   fields.forEach((f: Field) => {
-    if (f.name == "labels") {
+    if (f.name === "labels") {
       f.values.forEach((o: any) => {
         for (const k in o) {
           const lk = "labels." + k
@@ -67,8 +67,8 @@ export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, fields, labels
     return () => clearTimeout(timer);
   }, [localValue, onChange]);
 
-  const onKeyDown = (e:React.KeyboardEvent) => {
-    if ( e.key === "Backspace" && localValue == "" ) {
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if ( e.key === "Backspace" && localValue === "" ) {
       if ( toDeleteFilterIdx > -1 ) {
         const f = selectedFilters[toDeleteFilterIdx]
         setSelectedFilters(f.key, f.operation, f.value, "rm")
@@ -120,7 +120,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, fields, labels
     valueRegex.lastIndex = 0;
     const valMatch = valueRegex.exec(st);
     if (valMatch) {
-      let filtered:string[] = []
+      let filtered: string[] = []
       if (filterAvailVals[valMatch[1]]) {
         filtered = filterAvailVals[valMatch[1]].filter((s) => s.includes(valMatch[3])).map((v: string) => {
           return valMatch[1]+valMatch[2]+v
@@ -168,14 +168,14 @@ export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, fields, labels
     <div className={`relative w-full flex items-center`}>
       { selectedFilters.length > 0 &&
         <div className={clsx(
-          `text-xs px-2 flex gap-1 font-bold`
+          `text-xs pl-2 flex gap-1 font-bold`
         )}>
           {selectedFilters.map((f: Filter, idx: number) => (
             <div
               key={`${f.key}-${f.value}`}
               className={clsx(
-                `text-white px-2 rounded-sm py-1 select-none flex items-center`,
-                idx == toDeleteFilterIdx ? "border-2 border-red-500 bg-teal-500" : "bg-teal-700"
+                `text-white px-2 rounded-sm py-1 select-none flex items-center shadow-sm`,
+                idx === toDeleteFilterIdx ? "border-2 border-red-500 bg-teal-500" : "bg-teal-700"
               )}
               title={`${f.key} ${f.operation} ${f.value}`}
             >
@@ -205,10 +205,10 @@ export const Searchbar: React.FC<SearchbarProps> = ({ searchTerm, fields, labels
       <div className={clsx(
         `absolute left-0 top-full z-50 flex flex-col bg-neutral-50 p-2 rounded-md border-1 border-neutral-200 shadow-lg`
       )}>
-      {filteredValues.map((v:string, idx:number) =>
-        <div className={clsx(
+      {filteredValues.map((v: string, idx: number) =>
+        <div key={"filterVals"+idx} className={clsx(
           ``,
-          selectedIdx == idx ? 'bg-black/10' : ''
+          selectedIdx === idx ? 'bg-black/10' : ''
         )}
         onMouseEnter={() => setSelectedIdx(idx)}
         onClick={fillFilter}
