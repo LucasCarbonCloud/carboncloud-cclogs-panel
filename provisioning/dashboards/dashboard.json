@@ -64,7 +64,7 @@
           },
           "pluginVersion": "4.10.2",
           "queryType": "table",
-          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\" ,\n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) \n  AND ( LogAttributes['app'] IN (${app}) )\n  AND ( LogAttributes['component'] IN (${component}) )\n  AND ( LogAttributes['team'] IN (${team}) OR LogAttributes['team'] == '' )    \n  AND (body LIKE '%${searchTerm}%')\n  AND level IN (${logLevel})\n  AND ( LogAttributes['${customValKey1}'] LIKE '%${customValVal1}%' )  \n  AND ( LogAttributes['${customValKey2}'] LIKE '%${customValVal2}%' )  \n  AND ('${traceId}' = '' OR traceID = '${traceId}')\n  ${filter_conditions} \nORDER BY timestamp DESC LIMIT 1000",
+          "rawSql": "SELECT \n  Timestamp as \"timestamp\", \n  Body as \"body\", \n  SeverityText as \"level\", \n  LogAttributes as \"labels\", \n  TraceId as \"traceID\" ,\n  SpanId as \"spanID\" \nFROM \"otel_logs\" \nWHERE \n  ( timestamp >= $__fromTime AND timestamp <= $__toTime ) \n  AND ( LogAttributes['app'] IN (${app}) )\n  AND ( LogAttributes['component'] IN (${component}) )\n  AND ( LogAttributes['team'] IN (${team}) OR LogAttributes['team'] == '' )    \n  AND (body ILIKE '%${searchTerm}%')\n  AND level IN (${logLevel})\n  AND ( LogAttributes['${customValKey1}'] LIKE '%${customValVal1}%' )  \n  AND ( LogAttributes['${customValKey2}'] LIKE '%${customValVal2}%' )  \n  AND ('${traceId}' = '' OR traceID = '${traceId}')\n  ${filter_conditions} \nORDER BY timestamp DESC LIMIT 1000",
           "refId": "A"
         }
       ],

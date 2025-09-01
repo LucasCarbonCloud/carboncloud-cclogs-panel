@@ -9,7 +9,7 @@ import clsx from 'clsx';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-import { Searchbar } from './Components';
+import { Searchbar } from './Searchbar';
 import { Overview } from './Overview';
 import { LogDetails } from './LogDetails';
 import { generateFilterString, parseFilterString, parseSelectedKeys } from './functions';
@@ -47,7 +47,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
 
   const handleSearchTermChange = (value: string) => {
     setSearchTerm(value);
-    locationService.partial({ 'var-searchTerm': value }, true);
+    // remove @... tokens (and trailing space if any)
+    const filteredVal = value.replace(/#\S*\s?/g, "").trim();
+
+    locationService.partial({ "var-searchTerm": filteredVal }, true);
   };
 
   const handleTableLineHeight= (value: number) => {
@@ -112,12 +115,17 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
           tableLineHeight={tableLineHeight}
           setTableLineHeight={handleTableLineHeight}
           onChange={handleFieldChange}
-          selectedFilters={selectedFilters}
-          setSelectedFilters={handleSetFilterTerm}
         />
       </div>
       <div className="flex flex-col flex-grow gap-4 px-2 m-2">
-        <Searchbar searchTerm={searchTerm} onChange={handleSearchTermChange} />
+        <Searchbar
+          searchTerm={searchTerm}
+          fields={fields}
+          labels={[...keys, ...labels]}
+          onChange={handleSearchTermChange}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={handleSetFilterTerm}
+        />
         <Table
           options={options}
           fields={fields}

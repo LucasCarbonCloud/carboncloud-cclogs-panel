@@ -3,10 +3,7 @@ import { FieldSelector, NumberInput } from './Components';
 import { Filter as FilterCmp } from './Filter';
 import { useTheme2 } from '@grafana/ui';
 import clsx from 'clsx';
-import { Filter, FilterOperation } from 'types';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { MenuItemWrapper } from './Menu';
 
 
@@ -20,13 +17,6 @@ export interface SettingsProps {
   tableLineHeight: number;
   setTableLineHeight: (value: number) => void;
   onChange: (selected: string[], changeType: string) => void;
-  selectedFilters: Filter[];
-  setSelectedFilters: (
-    key: string,
-    operation: FilterOperation,
-    value: any,
-    op: "add" | "rm"
-  ) => void;
 }
 
 export const Settings: React.FC<SettingsProps> = ({
@@ -39,8 +29,6 @@ export const Settings: React.FC<SettingsProps> = ({
   tableLineHeight,
   setTableLineHeight,
   onChange,
-  selectedFilters,
-  setSelectedFilters
 }) => {
   const theme = useTheme2();
 
@@ -86,28 +74,10 @@ export const Settings: React.FC<SettingsProps> = ({
         <FilterCmp field={'component'} showName="component" isOpen={false} />
         <FilterCmp field={'team'} showName="team" isOpen={false} />
       </div>
-      <div className="flex flex-col gap-2 p-2 my-2 mb-6 w-80">
-        {selectedFilters.map((filter) => (
-          <div
-            key={`${filter.key}-${filter.operation}-${filter.value}`}
-            className="flex items-center py-1 px-2 w-full text-white bg-teal-700 rounded-md"
-            title={`${filter.key} ${filter.operation} ${filter.value}`}
-          >
-            <span className="flex-grow truncate">
-              {filter.key} {filter.operation} {filter.value}
-            </span>
-            <FontAwesomeIcon
-              className="ml-2 cursor-pointer hover:text-neutral-300"
-              icon={faCircleXmark}
-                      onClick={() => setSelectedFilters(filter.key, filter.operation, filter.value, "rm")}
-            />
-          </div>
-        ))}
-      </div>
 
       <p
         className={clsx(
-          'h-2 font-semibold uppercase pb-5',
+          'h-2 font-semibold uppercase pb-5 pt-10',
           theme.isDark ? 'text-neutral-400' : 'text-neutral-700'
         )}
       >Layout</p>
