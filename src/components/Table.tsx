@@ -309,7 +309,7 @@ export const Table: React.FC<TableProps> = ({ options, fields, keys, showLevel, 
           paddingLeft: '0.75rem',
           paddingRight: '0.75rem'
         }}
-      onClick={() => setLogDetails(index)}
+      onClick={() => setLogDetails(rowIndex)}
         className={clsx(
           'cursor-pointer border-b-1 hover:bg-neutral-50 text-sm',
           theme.isDark ? 'border-b-neutral-200/20 hover:bg-neutral-50/20' : 'border-b-neutral-200 hover:bg-neutral-50'
