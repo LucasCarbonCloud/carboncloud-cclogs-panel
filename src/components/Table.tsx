@@ -86,7 +86,16 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
   } else if (columnName === 'body') {
     const searchTerm = getTemplateSrv().replace('$searchTerm');
     if (searchTerm !== '' && searchTerm.length > 1) {
-      const parts = value.split(searchTerm);
+      const partsLowerCase = value.toLowerCase().split(searchTerm.toLowerCase());
+      let gIdx = 0;
+      let searchTerms: string[] = []
+      const parts = partsLowerCase.map((s: string) => {
+        const retval = value.substring(gIdx, gIdx + s.length );
+        searchTerms.push(value.substring(gIdx+s.length, gIdx+s.length+searchTerm.length))
+        gIdx += s.length + searchTerm.length;
+        return retval;
+      });
+
       return (
         <div className="flex overflow-hidden relative items-center font-mono text-sm truncate group">
           <div className="truncate">
@@ -101,7 +110,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
                     'px-1 bg-fuchsia-200 rounded-lg',
                     theme.isDark ? 'bg-fuchsia-900' : 'bg-fuchsia-200'
                   )}>
-                    {searchTerm}
+                    {searchTerms[idx]}
                   </span>
                 </React.Fragment>
               );
