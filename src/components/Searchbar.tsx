@@ -74,6 +74,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
       if (toDeleteFilterIdx > -1) {
         const f = selectedFilters[toDeleteFilterIdx];
         setSelectedFilters(f.key, f.operation, f.value, 'rm');
+        setToDeleteFilterIdx(-1);
       } else {
         setToDeleteFilterIdx(selectedFilters.length - 1);
       }
