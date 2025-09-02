@@ -214,13 +214,14 @@ export const Searchbar: React.FC<SearchbarProps> = ({
         {filteredValues.length > 0 && (
           <div
             className={clsx(
-              `absolute left-0 top-full z-50 flex flex-col bg-neutral-50 p-2 rounded-md border-1 border-neutral-200 shadow-lg cursor-pointer`
+              `absolute left-0 top-full z-50 flex flex-col p-2 rounded-md border-1 shadow-lg cursor-pointer`,
+               theme.isDark ? 'bg-neutral-800 border-neutral-600' : 'bg-neutral-50 border-neutral-200'
             )}
           >
             {filteredValues.map((v: string, idx: number) => (
               <div
                 key={'filterVals' + idx}
-                className={clsx(``, selectedIdx === idx ? 'bg-black/10' : '')}
+              className={clsx(``, selectedIdx === idx ? (theme.isDark ? 'bg-neutral-50/10' : 'bg-black/10') : '')}
                 onMouseEnter={() => setSelectedIdx(idx)}
                 onClick={fillFilter}
               >
