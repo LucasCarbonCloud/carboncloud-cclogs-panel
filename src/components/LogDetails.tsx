@@ -131,7 +131,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
 
 
     <div className={`flex px-2 py-4 items-center gap-2`}>
-    { typeof labelVals["language"] === "string" && languageIcons[labelVals["language"] as keyof typeof languageIcons] &&
+    { labelVals && typeof labelVals["language"] === "string" && languageIcons[labelVals["language"] as keyof typeof languageIcons] &&
       <FontAwesomeIcon
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         icon={languageIcons[labelVals["language"] as keyof typeof languageIcons] as any}
@@ -144,13 +144,15 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
       `uppercase font-bold text`,
        theme.isDark ? 'text-neutral-400' : 'text-neutral-500'
     )}>
-    {labelVals["app"]} - {labelVals["component"]}
+    {labelVals && labelVals["app"] || ''} - {labelVals && labelVals["component"] || ''}
       </span>
+      {labelVals && labelVals["team"] && (
       <div className={clsx(
         `bg-[${stringToDarkColor(labelVals["team"])}] text-white text-xs px-2 rounded-md font-bold uppercase`
       )}>
     {labelVals["team"]}
       </div>
+      )}
     </div>
 
     <div className="flex gap-2 px-2">
@@ -224,7 +226,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
       <div className="flex flex-col px-2 pt-4">
       <span className="mb-2 text-lg font-bold uppercase text-neutral-400">Labels</span>
     <table className="w-full">
-            {Object.entries(labelVals).map(([k, v]) => {
+            {labelVals && Object.entries(labelVals).map(([k, v]) => {
               return (
                 <tr
                   key={k}
