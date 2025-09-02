@@ -206,7 +206,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
           className="flex-grow p-3 rounded-xl outline-none"
           style={{ borderTopRightRadius: '0.5rem', borderBottomRightRadius: '0.5rem' }}
           type="text"
-          placeholder="Filter your logs. Add filters with #key[!=/=]value#"
+          placeholder="Filter your logs. Add filters with #key[!=/=]value#. Free text search the message."
           value={localValue}
           onChange={(e) => valueChange(e.target.value)}
           onKeyDown={(e) => onKeyDown(e)}

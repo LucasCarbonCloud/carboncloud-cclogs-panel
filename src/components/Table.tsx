@@ -7,7 +7,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import dayjs from 'dayjs';
 import { getTemplateSrv } from '@grafana/runtime';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlassPlus, faMagnifyingGlassMinus } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlassPlus, faMagnifyingGlassMinus, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { prettifyHeaderNames } from './functions';
 
 import { SimpleOptions, FilterOperation } from 'types';
@@ -25,7 +25,7 @@ export interface TableProps {
     key: string,
     operation: FilterOperation,
     value: any,
-    op: "add" | "rm"
+    op: "add" | "rm" | "only"
   ) => void;
   setLogDetails: (idx: number | undefined) => void;
 }
@@ -39,7 +39,7 @@ interface CellContentProps {
     key: string,
     operation: FilterOperation,
     value: any,
-    op: "add" | "rm"
+    op: "add" | "rm" | "only"
   ) => void;
   theme: any;
 }
@@ -123,6 +123,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
             <FontAwesomeIcon
               className="cursor-pointer hover:text-neutral-600"
               icon={faMagnifyingGlassPlus}
+              title="Add label to filter"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFilters(columnName, "=", displayValue, "add");
@@ -131,9 +132,19 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
             <FontAwesomeIcon
               className="cursor-pointer hover:text-neutral-600"
               icon={faMagnifyingGlassMinus}
+              title="Remove label from filter"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFilters(columnName, "!=", displayValue, "add");
+              }}
+            />
+            <FontAwesomeIcon
+              className="cursor-pointer hover:text-neutral-600"
+              icon={faMagnifyingGlass}
+              title="View only this label"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedFilters(columnName, "=", displayValue, "only");
               }}
             />
           </div>
@@ -160,6 +171,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
           <FontAwesomeIcon
             className="cursor-pointer hover:text-neutral-600"
             icon={faMagnifyingGlassPlus}
+            title="Add label to filter"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedFilters(columnName, "=", displayValue, "add");
@@ -168,9 +180,19 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
           <FontAwesomeIcon
             className="cursor-pointer hover:text-neutral-600"
             icon={faMagnifyingGlassMinus}
+            title="Remove label from filter"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedFilters(columnName, "!=", displayValue, "add");
+            }}
+          />
+          <FontAwesomeIcon
+            className="cursor-pointer hover:text-neutral-600"
+            icon={faMagnifyingGlass}
+            title="View only this label"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedFilters(columnName, "=", displayValue, "only");
             }}
           />
         </div>
@@ -188,6 +210,7 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
         <FontAwesomeIcon
           className="cursor-pointer hover:text-neutral-600"
           icon={faMagnifyingGlassPlus}
+          title="Add label to filter"
           onClick={(e) => {
             e.stopPropagation();
             setSelectedFilters(columnName, "=", displayValue, "add");
@@ -196,9 +219,19 @@ const CellContent: React.FC<CellContentProps> = ({ options, columnName, value, d
         <FontAwesomeIcon
           className="cursor-pointer hover:text-neutral-600"
           icon={faMagnifyingGlassMinus}
+          title="Remove label from filter"
           onClick={(e) => {
             e.stopPropagation();
             setSelectedFilters(columnName, "!=", displayValue, "add");
+          }}
+        />
+        <FontAwesomeIcon
+          className="cursor-pointer hover:text-neutral-600"
+          icon={faMagnifyingGlass}
+          title="View only this label"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedFilters(columnName, "=", displayValue, "only");
           }}
         />
       </div>

@@ -66,11 +66,16 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
     setLogDetails(row);
   };
 
-  const handleSetFilterTerm = (key: string, operation: FilterOperation, value: any, op: 'add' | 'rm') => {
+  const handleSetFilterTerm = (key: string, operation: FilterOperation, value: any, op: 'add' | 'rm' | 'only') => {
     setSelectedFilters((prevFilters) => {
       if (key === 'timestamp') {
         return prevFilters;
       }
+
+      if ( op === "only" ) {
+        return [{ key, operation, value }]
+      }
+
       const exists = prevFilters.some((f) => f.key === key && f.operation === operation && f.value === value);
 
       if (exists) {
