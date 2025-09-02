@@ -1,5 +1,5 @@
 import { Field } from '@grafana/data';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useTheme2 } from '@grafana/ui';
 import clsx from 'clsx';
@@ -20,6 +20,7 @@ export interface LogDetailsProps {
 
 export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowIndex, setLogDetails }) => {
   const theme = useTheme2();
+  const panelRef = useRef<HTMLDivElement>(null);
 
   let keyVals: { [key: string]: string } = {};
   let labelVals: { [key: string]: string } = {};
@@ -67,6 +68,27 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
     return () => clearInterval(interval);
   }, [timestamp]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        // Check if the click is on a table row (looking for cursor-pointer class and grid display style)
+        const target = event.target as HTMLElement;
+        const clickedElement = target.closest('.cursor-pointer');
+        const isTableRow = clickedElement && clickedElement.style.display === 'grid';
+        
+        // Only close if not clicking on a table row
+        if (!isTableRow) {
+          setLogDetails(undefined);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setLogDetails]);
+
     let levelColor;
     switch (keyVals["level"]) {
       case 'DEBUG':
@@ -91,6 +113,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
 
   return (
    <div
+     ref={panelRef}
      className={clsx(
        `px-4 border-1  shadow-2xl absolute right-0 top-0 w-1/2 h-full border-t-5 border-t-${levelColor} overflow-y-scroll pb-4`,
        theme.isDark ? 'bg-[#111217] border-neutral-200/20' : 'bg-neutral-50 border-neutral-200'
