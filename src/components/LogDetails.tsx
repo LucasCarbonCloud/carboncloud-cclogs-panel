@@ -73,7 +73,7 @@ export const LogDetails: React.FC<LogDetailsProps> = ({ options, fields, rowInde
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         // Check if the click is on a table row (looking for cursor-pointer class and grid display style)
         const target = event.target as HTMLElement;
-        const clickedElement = target.closest('.cursor-pointer');
+        const clickedElement = target.closest('.cursor-pointer') as HTMLElement;
         const isTableRow = clickedElement && clickedElement.style.display === 'grid';
         
         // Only close if not clicking on a table row
